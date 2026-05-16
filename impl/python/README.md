@@ -29,13 +29,17 @@ The runnable compliance suite lives in
   [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md)
   (`osi_version: "0.1"`).
 - **Out of scope (deferred):** LOD grain modes, filter context / reset,
-  named filters, semi-join filter form (`EXISTS_IN`), per-metric
+  semi-join filter form (`EXISTS_IN`), per-metric
   `joins.{type, using_relationships}`, `referential_integrity`,
   grouping sets, pivot, non-equijoins, ASOF, semi-additive measures,
   dataset-level filters with scope propagation, parameterized window
   frame bounds, `GROUPS` frame mode, windowed-metric composition. The
   full normative list is §10 of the Foundation spec; the design archive
   is in [`specs/deferred/README.md`](specs/deferred/README.md).
+  *Model-scoped named filters* (top-level `filters:`) and
+  *parameters* (top-level `parameters:`) are part of the Foundation
+  and accepted by the parser today — see
+  [`examples/models/demo_orders.yaml`](examples/models/demo_orders.yaml).
 
 We keep deferred features out of the code entirely — they raise
 `E_DEFERRED_KEY_REJECTED` at parse time — so the Foundation surface
@@ -209,7 +213,7 @@ Recently completed Foundation work (see `INFRA.md §3`):
   instead of silently falling back to the first-declared dimension.
 - M:N resolution per `§6.5`: bridge anchor discovery for dim-only
   queries, multi-fact stitch validation, and the spec-mandated
-  `E3012_MN_NO_SAFE_REWRITE` / `E3013_NO_STITCHING_DIMENSION` errors
+  `E3012_MN_NO_STITCH_PATH` / `E3013_NO_STITCHING_DIMENSION` errors
   for per-query failures. (`E3011_MN_AGGREGATION_REJECTED` is
   reserved for engines that opt out of M:N support entirely;
   `osi_python` supports M:N and never raises `E3011` at the
@@ -238,7 +242,7 @@ Recently completed Foundation work (see `INFRA.md §3`):
 Remaining Foundation gaps:
 
 - `SEMANTIC_VIEW(...)` SQL surface — specification complete in
-  [`../../proposals/foundation-v0.1/SQL_INTERFACE.md`](../../proposals/foundation-v0.1/SQL_INTERFACE.md); parser not yet
+  [`specs/SQL_INTERFACE.md`](specs/SQL_INTERFACE.md); parser not yet
   implemented. Tracked as `INFRA.md §3 I-12`. Error codes
   `E1201`–`E1213` are carved out in `osi.errors` with `RESERVED`
   annotations so the eventual parser lands with stable codes.

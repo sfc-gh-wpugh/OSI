@@ -54,13 +54,13 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ErrorCode.E1006_SQL_EXPRESSION_SYNTAX: (
         "A SQL expression in a metric, field, or filter did not parse with "
         "the OSI_SQL_2026 dialect. The error context names the offending "
-        "expression. (Spec: SQL_EXPRESSION_SUBSET_updated.md.)"
+        "expression. (Spec: SQL_EXPRESSION_SUBSET.md.)"
     ),
     # --- Foundation v0.1 named codes (Appendix C) -----------------------------
     ErrorCode.E_DEFERRED_KEY_REJECTED: (
         "The model used a YAML key, SQL function, or relationship attribute "
         "that the Foundation v0.1 explicitly defers (e.g. ``EXISTS_IN``, "
-        "``referential_integrity``, named filters). The catalog of deferred "
+        "``referential_integrity``, semi-join filter form). The catalog of deferred "
         "constructs is in ``specs/deferred/README.md``. The fix is to remove "
         "the construct or wait for the proposal that re-introduces it. "
         "(Spec: §10, Appendix B.)"
@@ -345,7 +345,7 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ErrorCode.E1208_UNSUPPORTED_SQL_CONSTRUCT: (
         "A SEMANTIC_VIEW used a SQL construct not in the OSI_SQL_2026 "
         "subset (e.g. ``LATERAL``, ``MATCH_RECOGNIZE``). "
-        "(Spec: SQL_EXPRESSION_SUBSET_updated.md.)"
+        "(Spec: SQL_EXPRESSION_SUBSET.md.)"
     ),
     ErrorCode.E1209_CROSS_DATASET_AD_HOC_AGGREGATE: (
         "A raw aggregate inside a SEMANTIC_VIEW spanned multiple datasets — "

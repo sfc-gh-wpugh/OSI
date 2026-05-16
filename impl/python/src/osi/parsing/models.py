@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 from enum import StrEnum
-from typing import Annotated, Any, ClassVar, Iterable, Optional
+from typing import Annotated, Any, ClassVar, Final, Iterable, Optional
 
 import sqlglot
 from pydantic import BaseModel, ConfigDict
@@ -347,10 +347,28 @@ class Parameter(_Strict):
         return _validate_identifier(str(value))
 
 
+SUPPORTED_OSI_VERSIONS: Final[frozenset[str]] = frozenset({"0.1"})
+"""Spec versions this Foundation reference implementation accepts.
+
+Per ``Proposed_OSI_Semantics.md`` §opening, a semantic model MAY
+declare ``osi_version: "0.1"`` at the model root. A model that omits
+the key is interpreted under the latest supported version. Future
+``0.x`` revisions remain additively compatible; this set grows when
+those revisions land.
+"""
+
+
 class SemanticModel(_Strict):
-    """Top-level semantic model (``§4.1``)."""
+    """Top-level semantic model (``§4.1``).
+
+    The optional ``osi_version`` field carries the spec version the
+    author wrote against. The Foundation rules out is the
+    intersection of every supported version, so a ``0.1`` model
+    keeps working against a ``0.2`` engine.
+    """
 
     name: Identifier
+    osi_version: Optional[str] = None
     dialect: Dialect = Dialect.OSI_SQL_2026
     datasets: tuple[Dataset, ...]
     relationships: tuple[Relationship, ...] = ()
@@ -363,6 +381,40 @@ class SemanticModel(_Strict):
     @classmethod
     def _normalize_name(cls, value: object) -> Identifier:
         return _validate_identifier(str(value))
+
+    @field_validator("osi_version", mode="before")
+    @classmethod
+    def _validate_osi_version(cls, value: object) -> object:
+        """Accept the documented spec versions, reject everything else.
+
+        The spec keeps ``osi_version`` optional (the engine assumes
+        latest when omitted) so ``None`` is accepted. A declared
+        value must be a string in :data:`SUPPORTED_OSI_VERSIONS`; an
+        unsupported version raises ``E1003_INVALID_ENUM_VALUE`` with
+        the list of supported versions in ``error.context`` so
+        adopters know what to write.
+        """
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise OSIParseError(
+                ErrorCode.E1004_TYPE_MISMATCH,
+                f"osi_version must be a string, got {type(value).__name__}",
+                context={"value": value},
+            )
+        if value not in SUPPORTED_OSI_VERSIONS:
+            raise OSIParseError(
+                ErrorCode.E1003_INVALID_ENUM_VALUE,
+                (
+                    f"osi_version {value!r} is not supported by this engine; "
+                    f"supported versions are {sorted(SUPPORTED_OSI_VERSIONS)}"
+                ),
+                context={
+                    "value": value,
+                    "supported": sorted(SUPPORTED_OSI_VERSIONS),
+                },
+            )
+        return value
 
     @field_validator("dialect", mode="before")
     @classmethod

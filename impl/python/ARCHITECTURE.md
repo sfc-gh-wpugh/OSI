@@ -406,12 +406,12 @@ abstraction, not to make the layers leaky.
 
 | Goal | Entry point |
 |:---|:---|
-| Parse a model | `osi.parsing.parse_semantic_model(path)` |
-| Build a query plan | `osi.planning.plan(ctx, query)` where `ctx = PlannerContext(model, namespace, graph)` |
+| Parse a model | `osi.parsing.parse_semantic_model(source)` where `source` is a path or YAML string |
+| Build a query plan | `osi.planning.plan(query, context)` where `context = PlannerContext(model=model, namespace=namespace, graph=graph)` |
 | Render SQL | `osi.codegen.compile_plan(plan, dialect=Dialect.DUCKDB)` |
-| End-to-end CLI | `osi_cli.py` (`load`, `describe`, `sql`, `explain`, `run`) |
-| Diagnostics CLI | `python -m osi describe \| explain \| resolve \| compile \| explain-code` |
+| CLI (after `pip install -e .`) | `osi describe` · `osi explain` · `osi resolve` · `osi compile` · `osi explain-code` — registered as a console script (see `pyproject.toml [project.scripts]`) |
+| CLI (without install) | `python -m osi describe \| explain \| resolve \| compile \| explain-code` |
 | Look up an error code | `osi.diagnostics.error_catalog.explain_error(code)` or `osi explain-code <CODE>` |
-| End-to-end Python example | `examples/run_example.py` |
-| Algebra deep-dive | [`specs/JOIN_ALGEBRA.md`](specs/JOIN_ALGEBRA.md) · [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md) |
-| Foundation standard | [`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md) |
+| End-to-end Python example | The `README.md` Quick Start block + the runnable scenarios under `examples/` |
+| Algebra deep-dive | [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) |
+| Foundation standard | [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) |

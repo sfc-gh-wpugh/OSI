@@ -31,6 +31,14 @@ dependencies = [
     "networkx>=3.0",
 ]
 
+[project.scripts]
+# Registers the ``osi`` console command so ``pip install -e .`` (or
+# ``pip install osi-python``) puts ``osi describe``, ``osi explain``,
+# ``osi resolve``, ``osi compile``, and ``osi explain-code`` on the
+# user's PATH. Phase 10 / 10b B3 — docs assumed this binary existed
+# before this entry was added.
+osi = "osi.cli:main"
+
 [project.optional-dependencies]
 dev = [
     # Test runner

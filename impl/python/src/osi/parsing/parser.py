@@ -9,11 +9,13 @@ Pipeline:
 2. Root normalization — accept ``{semantic_model: [{...}]}`` or a bare
    model mapping.
 3. Deferred-feature screen — reject YAML keys reserved for deferred
-   proposals (``E1105``). Done *before* pydantic so we can give a
-   friendlier error than "extra field forbidden".
+   proposals (``E_DEFERRED_KEY_REJECTED``). Done *before* pydantic
+   so we can give a friendlier error than "extra field forbidden".
 4. Pydantic schema validation (``E1001`` / ``E1002`` / ``E1004``).
 5. Deferred-feature expression screen — walk every parsed SQL AST and
-   reject window / pivot / grouping-set constructs (``E1105``).
+   reject window / pivot / grouping-set constructs with
+   ``E_DEFERRED_KEY_REJECTED`` or the more specific code that
+   applies (e.g. ``E_DEFERRED_FRAME_MODE`` for ``GROUPS`` frames).
 6. Cross-reference validation (``E2xxx``).
 7. Foundation-strictness screen — reject deferred constructs not
    enabled in the caller's :class:`~osi.config.FoundationFlags`
@@ -34,8 +36,8 @@ from osi.config import FoundationFlags
 from osi.errors import ErrorCode, OSIParseError
 from osi.parsing._root import unwrap_model_root
 from osi.parsing.deferred import check_expression_deferred, check_yaml_deferred
-from osi.parsing.foundation import check_foundation_strictness
 from osi.parsing.function_whitelist import check_expression_functions
+from osi.parsing.foundation import check_foundation_strictness
 from osi.parsing.graph import RelationshipGraph, build_graph
 from osi.parsing.models import Field, Metric, NamedFilter, SemanticModel
 from osi.parsing.namespace import Namespace, build_namespace

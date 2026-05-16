@@ -245,6 +245,42 @@ class TestSemanticModel:
         assert model.metrics == ()
         assert model.filters == ()
         assert model.parameters == ()
+        assert model.osi_version is None
+
+    def test_osi_version_optional_per_spec(self) -> None:
+        """A model that omits ``osi_version`` is interpreted under the
+        latest supported version (Proposed_OSI_Semantics.md §opening).
+        Storing ``None`` keeps that contract explicit.
+        """
+        model = SemanticModel(name="x", datasets=[_minimal_dataset()])
+        assert model.osi_version is None
+
+    def test_osi_version_accepts_supported_value(self) -> None:
+        model = SemanticModel(
+            name="x", osi_version="0.1", datasets=[_minimal_dataset()]
+        )
+        assert model.osi_version == "0.1"
+
+    def test_osi_version_rejects_unsupported_value_E1003(self) -> None:
+        """Future ``0.x`` revisions stay additively compatible but until
+        an engine is updated to recognise a new version, declaring it
+        is rejected with ``E1003_INVALID_ENUM_VALUE`` and a context
+        carrying the supported set so adopters know what they can write.
+        """
+        with pytest.raises(OSIError) as exc:
+            SemanticModel(
+                name="x", osi_version="0.2", datasets=[_minimal_dataset()]
+            )
+        assert exc.value.code is ErrorCode.E1003_INVALID_ENUM_VALUE
+        assert exc.value.context["value"] == "0.2"
+        assert "0.1" in exc.value.context["supported"]
+
+    def test_osi_version_non_string_rejected_E1004(self) -> None:
+        with pytest.raises(OSIError) as exc:
+            SemanticModel(
+                name="x", osi_version=0.1, datasets=[_minimal_dataset()]
+            )
+        assert exc.value.code is ErrorCode.E1004_TYPE_MISMATCH
 
 
 _ = OSIParseError  # re-export used by readers of this module
