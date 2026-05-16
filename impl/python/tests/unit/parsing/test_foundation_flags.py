@@ -40,8 +40,7 @@ from osi.parsing import parse_semantic_model
 # A field whose body is an aggregate over its own dataset's columns.
 # Pre-deferral this would have been treated as a same-grain aggregate;
 # Foundation v0.1 §4.3 / D-003 rejects every aggregate-bodied field.
-_AGGREGATE_IN_FIELD_YAML = dedent(
-    """
+_AGGREGATE_IN_FIELD_YAML = dedent("""
     semantic_model:
       - name: demo
         datasets:
@@ -57,13 +56,11 @@ _AGGREGATE_IN_FIELD_YAML = dedent(
               - name: total_amount
                 expression: SUM(amount)
                 role: fact
-    """
-).strip()
+    """).strip()
 
 # Same model as above but with the aggregate moved out of the field and
 # into a top-level metric — the strict-Foundation shape.
-_AGGREGATE_IN_TOP_LEVEL_METRIC_YAML = dedent(
-    """
+_AGGREGATE_IN_TOP_LEVEL_METRIC_YAML = dedent("""
     semantic_model:
       - name: demo
         datasets:
@@ -79,13 +76,11 @@ _AGGREGATE_IN_TOP_LEVEL_METRIC_YAML = dedent(
         metrics:
           - name: total_amount
             expression: SUM(orders.amount)
-    """
-).strip()
+    """).strip()
 
 # A per-dataset ``metrics:`` block. The model is otherwise minimal; the
 # rejection must fire purely on the presence of the key.
-_DATASET_SCOPED_METRIC_YAML = dedent(
-    """
+_DATASET_SCOPED_METRIC_YAML = dedent("""
     semantic_model:
       - name: demo
         datasets:
@@ -101,15 +96,13 @@ _DATASET_SCOPED_METRIC_YAML = dedent(
             metrics:
               - name: total_amount
                 expression: SUM(amount)
-    """
-).strip()
+    """).strip()
 
 # A metric whose body is an aggregate of another aggregate. The two
 # aggregates are distributive (SUM of SUM), which the §10 proposal
 # would collapse to a single SUM, but the Foundation rejects all
 # nested forms uniformly.
-_NESTED_AGGREGATION_YAML = dedent(
-    """
+_NESTED_AGGREGATION_YAML = dedent("""
     semantic_model:
       - name: demo
         datasets:
@@ -125,14 +118,12 @@ _NESTED_AGGREGATION_YAML = dedent(
         metrics:
           - name: bad_double_sum
             expression: SUM(SUM(orders.amount))
-    """
-).strip()
+    """).strip()
 
 # A windowed aggregate inside a field expression. Window functions are
 # permitted in fields (§4.3.1); the strictness check must therefore
 # leave this alone even though it contains an :class:`exp.AggFunc` node.
-_WINDOWED_AGGREGATE_FIELD_YAML = dedent(
-    """
+_WINDOWED_AGGREGATE_FIELD_YAML = dedent("""
     semantic_model:
       - name: demo
         datasets:
@@ -151,8 +142,7 @@ _WINDOWED_AGGREGATE_FIELD_YAML = dedent(
                 expression: >-
                   ROW_NUMBER() OVER (PARTITION BY customer_id
                                      ORDER BY amount DESC)
-    """
-).strip()
+    """).strip()
 
 
 # ---------------------------------------------------------------------------
@@ -301,8 +291,7 @@ class TestFoundationFlagsConstructors:
         # contract in :mod:`osi.parsing.foundation` and gives authors
         # the more familiar deferred-key error message before the
         # newer aggregate-in-field one.
-        both_yaml = dedent(
-            """
+        both_yaml = dedent("""
             semantic_model:
               - name: demo
                 datasets:
@@ -321,8 +310,7 @@ class TestFoundationFlagsConstructors:
                     metrics:
                       - name: total_amount_metric
                         expression: SUM(amount)
-            """
-        ).strip()
+            """).strip()
         with pytest.raises(OSIParseError) as exc:
             parse_semantic_model(both_yaml)
         assert exc.value.code is ErrorCode.E_DEFERRED_KEY_REJECTED

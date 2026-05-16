@@ -71,7 +71,9 @@ def _agg(name: str, *, over: str) -> Column:
     return Column(
         name=normalize_identifier(name),
         expression=FrozenSQL.of(
-            exp.Anonymous(this="SUM", expressions=[exp.column(str(over_id), quoted=True)])
+            exp.Anonymous(
+                this="SUM", expressions=[exp.column(str(over_id), quoted=True)]
+            )
         ),
         dependencies=frozenset({over_id}),
         kind=ColumnKind.AGGREGATE,

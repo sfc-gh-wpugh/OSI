@@ -102,8 +102,7 @@ class TestRejectionPaths:
     def test_nested_window_still_rejected(self) -> None:
         # SUM(SUM(x) OVER (...)) OVER (...) — D-031.
         expr = _frozen(
-            "SUM(SUM(amount) OVER (PARTITION BY a)) "
-            "OVER (PARTITION BY b ORDER BY c)"
+            "SUM(SUM(amount) OVER (PARTITION BY a)) " "OVER (PARTITION BY b ORDER BY c)"
         )
         assert first_nested_window(expr.expr) is not None
         with pytest.raises(OSIParseError) as exc:

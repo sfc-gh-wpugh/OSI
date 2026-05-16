@@ -133,7 +133,9 @@ def _cmd_explain_code(args: argparse.Namespace) -> int:
         return _cmd_explain_code_list(args)
     raw = (args.code or "").strip()
     if not raw:
-        sys.stderr.write("error: an OSI error code is required (e.g. E_NAME_NOT_FOUND)\n")
+        sys.stderr.write(
+            "error: an OSI error code is required (e.g. E_NAME_NOT_FOUND)\n"
+        )
         return 2
     try:
         code = _resolve_error_code(raw)
@@ -161,7 +163,10 @@ def _cmd_explain_code_list(args: argparse.Namespace) -> int:
     explanations = all_explanations()
     if getattr(args, "json", False):
         json.dump(
-            {c.value: explanations[c] for c in sorted(explanations, key=lambda c: c.value)},
+            {
+                c.value: explanations[c]
+                for c in sorted(explanations, key=lambda c: c.value)
+            },
             sys.stdout,
             indent=2,
             sort_keys=True,

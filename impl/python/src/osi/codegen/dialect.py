@@ -72,9 +72,7 @@ def render_sql(expression: exp.Expression, *, dialect: Dialect) -> str:
             context={"dialect": dialect},
         )
     try:
-        return expression.sql(
-            dialect=dialect_name or None, pretty=True, identify=True
-        )
+        return expression.sql(dialect=dialect_name or None, pretty=True, identify=True)
     except Exception as err:  # pragma: no cover — SQLGlot internals
         raise OSICodegenError(
             ErrorCode.E5002_SQLGLOT_RENDER_FAILED,

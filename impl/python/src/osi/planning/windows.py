@@ -50,8 +50,7 @@ def is_windowed_expression(expression: exp.Expression) -> bool:
     :func:`references_windowed_metric`.
     """
     return isinstance(expression, exp.Window) or (
-        isinstance(expression, exp.Alias)
-        and isinstance(expression.this, exp.Window)
+        isinstance(expression, exp.Alias) and isinstance(expression.this, exp.Window)
     )
 
 

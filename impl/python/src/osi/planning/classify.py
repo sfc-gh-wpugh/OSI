@@ -247,7 +247,7 @@ def _reject_aggregate_in_where(
 
 
 def _contains_aggregate(node: exp.Expression) -> bool:
-    """True iff ``node`` (or any descendant) is a SQL aggregate call."""
+    """Return True iff ``node`` (or any descendant) is a SQL aggregate call."""
     return any(isinstance(_unwrap_walk(n), exp.AggFunc) for n in node.walk())
 
 
@@ -277,7 +277,7 @@ def _first_measure_reference(
 def _contains_non_aggregate_column(
     node: exp.Expression, measure_names: frozenset[Identifier]
 ) -> bool:
-    """True iff ``node`` references a column **outside** every aggregate.
+    """Return True iff ``node`` references a column **outside** every aggregate.
 
     Used to detect the mixed-level shape (D-012c). A column reference
     that lives inside an aggregate function (e.g. ``orders.amount``

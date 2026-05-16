@@ -31,7 +31,13 @@ def _frozen(sql: str) -> FrozenSQL:
     return FrozenSQL.of(parse_sql_expr(sql))
 
 
-_AGGREGATE_FNS = ["SUM(amount)", "COUNT(id)", "MIN(amount)", "MAX(amount)", "AVG(amount)"]
+_AGGREGATE_FNS = [
+    "SUM(amount)",
+    "COUNT(id)",
+    "MIN(amount)",
+    "MAX(amount)",
+    "AVG(amount)",
+]
 _RANKING_FNS = ["ROW_NUMBER()", "RANK()", "DENSE_RANK()"]
 
 
@@ -44,8 +50,12 @@ def windowed_expressions(draw) -> tuple[str, str, Optional[str]]:
     sqlglot's deterministic rendering is stable across versions.
     """
     fn = draw(st.sampled_from(_AGGREGATE_FNS + _RANKING_FNS))
-    partition_cols = draw(st.lists(st.sampled_from(["a", "b"]), max_size=2, unique=True))
-    order_cols_raw = draw(st.lists(st.sampled_from(["a", "b", "c"]), max_size=2, unique=True))
+    partition_cols = draw(
+        st.lists(st.sampled_from(["a", "b"]), max_size=2, unique=True)
+    )
+    order_cols_raw = draw(
+        st.lists(st.sampled_from(["a", "b", "c"]), max_size=2, unique=True)
+    )
     order_cols = ", ".join(order_cols_raw) if order_cols_raw else None
     partition = ", ".join(partition_cols) if partition_cols else None
     return fn, partition, order_cols

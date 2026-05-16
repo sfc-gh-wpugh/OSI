@@ -38,8 +38,7 @@ def test_catalog_set_matches_enum_set() -> None:
     missing = enum - catalog
     extra = catalog - enum
     assert not missing, (
-        f"Error codes missing from catalog: "
-        f"{sorted(c.name for c in missing)}"
+        f"Error codes missing from catalog: " f"{sorted(c.name for c in missing)}"
     )
     assert not extra, (
         f"Catalog contains entries that are not in ErrorCode: "

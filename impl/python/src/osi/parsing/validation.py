@@ -223,9 +223,7 @@ def _validate_no_windowed_metric_composition(
         # arithmetic expression, another window, etc.).
         for column in metric.expression.expr.find_all(exp.Column):
             bare = (column.name or "").lower()
-            qualified = (
-                f"{column.table.lower()}.{bare}" if column.table else ""
-            )
+            qualified = f"{column.table.lower()}.{bare}" if column.table else ""
             if bare in windowed_metric_names or (
                 qualified and qualified in windowed_metric_names
             ):

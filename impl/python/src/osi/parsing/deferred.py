@@ -80,7 +80,6 @@ DEFERRED_FIELD_KEYS: Final[frozenset[str]] = frozenset(
         # facts; the user-facing rejection lives in the SQL surface
         # (a ``{role=…}`` reference in an expression) which is caught
         # via _DEFERRED_FUNCTION_NAMES / unknown-construct paths.
-
         # S-1: ``agg:`` on a field is the deferred ``AGG`` keyword.
         "agg",
     }

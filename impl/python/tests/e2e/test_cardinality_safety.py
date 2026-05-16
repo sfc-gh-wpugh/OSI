@@ -63,9 +63,7 @@ def _ctx(model_yaml: str) -> PlannerContext:
     # blocks, deferred under the strict Foundation; opt back in via
     # the legacy-permissive flag set so the planner-side cardinality
     # contract stays exercised end-to-end.
-    parsed = parse_semantic_model(
-        model_yaml, flags=FoundationFlags.legacy_permissive()
-    )
+    parsed = parse_semantic_model(model_yaml, flags=FoundationFlags.legacy_permissive())
     return PlannerContext(
         model=parsed.model,
         namespace=build_namespace(parsed.model),

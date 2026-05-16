@@ -76,9 +76,7 @@ class TestIsWindowedExpression:
 class TestFirstNestedWindow:
     def test_detects_window_in_window_argument(self) -> None:
         nested = first_nested_window(
-            _parse(
-                "SUM(SUM(amount) OVER (PARTITION BY a)) OVER (PARTITION BY b)"
-            )
+            _parse("SUM(SUM(amount) OVER (PARTITION BY a)) OVER (PARTITION BY b)")
         )
         assert nested is not None
 

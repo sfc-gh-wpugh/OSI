@@ -178,9 +178,7 @@ def orders_context() -> PlannerContext:
 
 def mn_context() -> PlannerContext:
     """Build a model with a deliberate N:N edge for rejection tests."""
-    result = parse_semantic_model(
-        _MN_MODEL, flags=FoundationFlags.legacy_permissive()
-    )
+    result = parse_semantic_model(_MN_MODEL, flags=FoundationFlags.legacy_permissive())
     namespace = build_namespace(result.model)
     graph = build_graph(result.model)
     return PlannerContext(

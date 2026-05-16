@@ -1,10 +1,10 @@
 """Symbolic grain helpers used by tests and diagnostics.
 
-Per ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4.4`` the resulting grain of any operator
-chain is a pure function of the argument sequence. This module exposes
-that function without needing to construct real states — the property
-test ``test_grain_closure.py`` uses it to compare symbolic computation
-to the concrete algebra.
+Per ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4.4``
+the resulting grain of any operator chain is a pure function of the
+argument sequence. This module exposes that function without needing
+to construct real states — the property test ``test_grain_closure.py``
+uses it to compare symbolic computation to the concrete algebra.
 
 The simulator tracks **two** pieces of grain-relevant state:
 

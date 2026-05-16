@@ -30,7 +30,6 @@ from osi.errors import (  # noqa: E402
     ErrorCode,
     OSIError,
     OSIParseError,
-    OSIPlanningError,
 )
 
 # S-10: legacy numeric codes → Appendix C named codes for user-facing
@@ -222,9 +221,7 @@ def cmd_sql(args: argparse.Namespace) -> int:
         if aliases:
             from dataclasses import replace as _replace
 
-            from osi.common.identifiers import (
-                normalize_identifier as _norm,
-            )
+            from osi.common.identifiers import normalize_identifier as _norm
 
             compiled_plan = _replace(
                 compiled_plan,

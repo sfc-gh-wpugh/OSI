@@ -21,7 +21,6 @@ from __future__ import annotations
 
 from typing import cast
 
-import sqlglot
 from hypothesis import strategies as st
 from sqlglot import expressions as exp
 

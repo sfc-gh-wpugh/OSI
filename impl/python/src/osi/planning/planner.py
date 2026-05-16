@@ -85,16 +85,16 @@ from osi.planning.planner_composites import (
 from osi.planning.planner_context import PlannerContext
 from osi.planning.planner_mn import MeasureGroup as _MeasureGroup
 from osi.planning.planner_mn import build_dimension_only_group as _dimension_only_group
-from osi.planning.planner_nested import (
-    infer_intermediate_grain,
-    insert_nested_aggregate,
-    is_nested_aggregate,
-)
 from osi.planning.planner_mn import (
     group_allowed_relationships as _group_allowed_relationships,
 )
 from osi.planning.planner_mn import (
     validate_multi_fact_stitch as _validate_multi_fact_stitch,
+)
+from osi.planning.planner_nested import (
+    infer_intermediate_grain,
+    insert_nested_aggregate,
+    is_nested_aggregate,
 )
 from osi.planning.planner_scalar import plan_scalar
 from osi.planning.preprocess import inline_named_filters, substitute_parameters
@@ -534,9 +534,8 @@ def _maybe_build_via_bridge(
         # extra grain bookkeeping). Fall back to the original error.
         return None
 
-    nested_only = (
-        len(group.measures) == 1
-        and is_nested_aggregate(group.measures[0].metric)
+    nested_only = len(group.measures) == 1 and is_nested_aggregate(
+        group.measures[0].metric
     )
 
     applicable, _reason = can_apply_bridge_resolution(group)

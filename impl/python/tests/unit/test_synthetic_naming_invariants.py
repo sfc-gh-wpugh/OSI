@@ -51,13 +51,12 @@ _FORBIDDEN_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
 
 
 def _project_root() -> Path:
-    """Locate the implementation root by walking up to the nearest
-    ``pyproject.toml`` whose ``src/osi/`` package exists.
+    """Locate the implementation root from the test file's path.
 
-    This walks up from the test file rather than hard-coding the project
-    directory name so it works regardless of whether the implementation
-    lives under ``osi_python/`` (the legacy layout) or
-    ``impl/python/`` (the OSI repo layout).
+    Walks upward to the nearest directory whose ``pyproject.toml`` sits
+    alongside a ``src/osi/`` package — works under both the legacy
+    ``osi_python/`` layout and the OSI repo's ``impl/python/`` layout
+    without hard-coding either directory name.
     """
     here = Path(__file__).resolve()
     for parent in here.parents:
