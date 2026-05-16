@@ -9,7 +9,8 @@ code cannot land without a docstring.
 
 Consumers:
 
-* CLI ``osi explain <code>`` (future).
+* CLI ``osi explain-code <code>`` and ``osi explain-code --list``
+  (registered as a console script in ``pyproject.toml``).
 * Compliance suite reporters that want a human-readable cause column.
 * Internal debugging — ``from osi.diagnostics.error_catalog import
   explain_error`` is the canonical lookup.
@@ -54,7 +55,7 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ErrorCode.E1006_SQL_EXPRESSION_SYNTAX: (
         "A SQL expression in a metric, field, or filter did not parse with "
         "the OSI_SQL_2026 dialect. The error context names the offending "
-        "expression. (Spec: SQL_EXPRESSION_SUBSET.md.)"
+        "expression. (Spec: SQL_EXPRESSION_SUBSET_updated.md.)"
     ),
     # --- Foundation v0.1 named codes (Appendix C) -----------------------------
     ErrorCode.E_DEFERRED_KEY_REJECTED: (
@@ -345,7 +346,7 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ErrorCode.E1208_UNSUPPORTED_SQL_CONSTRUCT: (
         "A SEMANTIC_VIEW used a SQL construct not in the OSI_SQL_2026 "
         "subset (e.g. ``LATERAL``, ``MATCH_RECOGNIZE``). "
-        "(Spec: SQL_EXPRESSION_SUBSET.md.)"
+        "(Spec: SQL_EXPRESSION_SUBSET_updated.md.)"
     ),
     ErrorCode.E1209_CROSS_DATASET_AD_HOC_AGGREGATE: (
         "A raw aggregate inside a SEMANTIC_VIEW spanned multiple datasets — "
@@ -543,7 +544,7 @@ def all_explanations() -> dict[ErrorCode, str]:
     """Return a copy of the full catalog.
 
     Used by tests and by tooling that wants to dump the catalog
-    (``osi explain --all``).
+    (``osi explain-code --list``).
     """
     return dict(_EXPLANATIONS)
 

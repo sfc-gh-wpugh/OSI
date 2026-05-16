@@ -25,10 +25,17 @@ from __future__ import annotations
 
 from osi.errors import ErrorCode
 
-# Appendix C codes (extracted verbatim from the ``Proposed_OSI_Semantics.md``
-# §"Appendix C: Error Code Index" table). Keep alphabetical within
-# family for review ergonomics. If a new spec revision adds or removes
-# a row, update this set first and the test will surface the enum work.
+# Appendix C codes — the working set this implementation considers
+# in-scope at Foundation v0.1. This is curated from the
+# ``Proposed_OSI_Semantics.md`` §"Appendix C: Error Code Index" table:
+# every active row is mirrored here, but the implementation also
+# treats this list as the test contract, so a spec revision that adds
+# or removes a row must update this set first (and the test will
+# surface the enum-side work to follow).
+#
+# Codes that the enum carries as implementation extensions live in
+# :data:`_IMPLEMENTATION_EXTENSIONS` instead. Keep both lists
+# alphabetical within family for review ergonomics.
 _APPENDIX_C_CODES: frozenset[str] = frozenset(
     {
         # E_* — Foundation-named correctness codes.

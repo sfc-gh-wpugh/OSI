@@ -69,14 +69,9 @@ For the error code catalog see [`docs/ERROR_CODES.md`](docs/ERROR_CODES.md).
 
 ## Quick start
 
-```bash
-cd impl/python
-make install-dev          # creates .venv, installs deps and pre-commit hooks
-make check                # lint + type + unit + property + golden + E2E
-make test                 # the full test suite
-make mutation-fast        # mutation testing on the algebra module (~5 min)
-make mutation             # mutation testing on everything (~30 min)
-```
+> **Five-minute adopter path.** Parse a YAML model, plan a semantic
+> query, render dialect-specific SQL. The contributor `make` targets
+> live below.
 
 ```python
 import sqlglot
@@ -158,6 +153,22 @@ result = parse_semantic_model(
 The flags are documented in [`src/osi/config.py`](src/osi/config.py).
 Models that turn flags on are no longer portable — the canonical
 Foundation v0.1 stance is `flags=None` (the default).
+
+## Contributor setup
+
+The `make` targets cover every stage CI runs:
+
+```bash
+cd impl/python
+make install-dev          # creates .venv, installs deps and pre-commit hooks
+make check                # lint + type + unit + property + golden + E2E
+make test                 # the full test suite
+make mutation-fast        # mutation testing on the algebra module (~5 min)
+make mutation             # mutation testing on everything (~30 min)
+```
+
+See [`RUNNING_TESTS.md`](RUNNING_TESTS.md) for the readable per-stage
+report.
 
 ---
 

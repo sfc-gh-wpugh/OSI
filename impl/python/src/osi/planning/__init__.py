@@ -7,6 +7,19 @@ closed-algebra operator over an immutable ``CalculationState``.
 See ``../../../ARCHITECTURE.md`` §3 and
 ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`` for the
 algebra contract.
+
+**Public API tiers**
+
+``osi.planning`` is the *compiler-developer* surface: the full IR plus
+every algebra operator, resolution helper, and predicate classifier.
+Adopters who just want to compile a query at the application level
+should import the happy-path symbols from ``osi`` instead (the package
+re-exports ``plan``, ``Reference``, ``SemanticQuery``,
+``PlannerContext``); those names also live here for direct reach but
+are intentionally re-exported via the top-level façade. The wider
+``__all__`` below is what a custom dialect adapter or replacement
+codegen pass needs in order to traverse a ``QueryPlan`` — adopters who
+only render the plan as SQL never have to touch most of these.
 """
 
 from osi.planning.algebra import (

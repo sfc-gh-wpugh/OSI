@@ -194,7 +194,7 @@ All aggregation functions operate on the effective grain of the metric.
 | `VAR_POP` | `VAR_POP(expr)` | Population variance | Algebraic |
 | `VAR_SAMP` | `VAR_SAMP(expr)` | Sample variance (alias for VARIANCE) | Algebraic |
 
-### Percentile Functions (REQUIRED)
+### Percentile Functions (REQUIRED — parseable surface; Foundation planner support is limited)
 
 | Function | Syntax | Description | Decomposability |
 | :---- | :---- | :---- | :---- |
@@ -203,6 +203,17 @@ All aggregation functions operate on the effective grain of the metric.
 | `PERCENTILE_DISC` | `PERCENTILE_DISC(p) WITHIN GROUP (ORDER BY expr)` | Discrete percentile (actual value) | Holistic |
 
 Where `p` is a value between 0 and 1 (e.g., 0.5 for median, 0.75 for 75th percentile).
+
+> **Foundation v0.1 status.** These functions are part of the
+> OSI_SQL_2026 *parseable* surface (so any tooling that lints, formats,
+> or re-emits an expression keeps it intact), but
+> [`Proposed_OSI_Semantics.md` §10](Proposed_OSI_Semantics.md#10-deferred)
+> defers the ordered-set form `WITHIN GROUP (ORDER BY …)` from the
+> Foundation Tier, and a conforming planner MUST reject all
+> holistic percentile/median aggregates as top-level metric expressions
+> with `E1208_UNSUPPORTED_SQL_CONSTRUCT` (see Appendix C). They will
+> become first-class once the dedicated grain-aware-functions
+> proposal lands.
 
 ### Approximate Aggregations (RECOMMENDED)
 
