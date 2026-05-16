@@ -1,7 +1,9 @@
--- Reference SQL: hand-written, portable across dialects. Computes the
--- chain inline in CTEs (one per derived field) so no lateral aliasing
--- is required. The implementation under test is free to stage
--- differently — only the row set matters.
+-- Reference SQL: hand-written and portable across dialects. The
+-- harness executes both this query and the adapter's emitted SQL
+-- against the same fixture; only the resulting row multiset is
+-- compared (per D-014, SQL byte-text is a per-engine concern). The
+-- shape below — one CTE per derived field — is illustrative; the
+-- adapter is free to stage differently.
 WITH lt AS (
     SELECT id, qty * price AS line_total
     FROM order_lines
