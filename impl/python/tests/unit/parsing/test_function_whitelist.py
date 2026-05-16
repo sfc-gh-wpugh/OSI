@@ -115,6 +115,7 @@ def test_out_of_subset_function_rejected(sql: str, function_name: str) -> None:
 def test_error_message_cites_d021_and_spec() -> None:
     with pytest.raises(OSIParseError) as exc:
         check_expression_functions(_expr("FOOBAR(x)"), where="metric m")
+    assert exc.value.code is ErrorCode.E_UNKNOWN_FUNCTION
     msg = str(exc.value)
     assert "FOOBAR" in msg
     assert "OSI_SQL_2026" in msg
@@ -137,6 +138,7 @@ def test_unknown_function_inside_case_branch_rejected() -> None:
     sql = "CASE WHEN amount > 0 THEN FOOBAR(amount) ELSE 0 END"
     with pytest.raises(OSIParseError) as exc:
         check_expression_functions(_expr(sql), where="m")
+    assert exc.value.code is ErrorCode.E_UNKNOWN_FUNCTION
     assert exc.value.context["function"] == "FOOBAR"
 
 

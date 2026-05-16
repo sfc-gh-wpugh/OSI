@@ -180,11 +180,19 @@ def plan(query: SemanticQuery, context: PlannerContext) -> QueryPlan:
                 context=context,
             )
         except OSIPlanningError as exc:
-            # S-9 / D-022: an enrichment-time fan-out rejection inside
-            # an aggregation query is the "non-distributive over M:N
-            # is unsafe" case from the spec. Translate the algebra
-            # safety code to the named user-facing code so the
-            # diagnostic matches Appendix C.
+            # Per the ``E3011_MN_AGGREGATION_REJECTED`` docstring in
+            # :mod:`osi.errors`: ``E3011`` is the engine-capability
+            # opt-out code, reserved for engines that refuse all M:N
+            # traversal. This reference implementation **supports** M:N
+            # (Proposed_OSI_Semantics.md §6.8 *Semantic guarantee*) and
+            # so must never surface ``E3011`` to users. Algebra raises
+            # it as a precondition signal on fan-out / fan-trap edges;
+            # ``joins.classify_relationship_path`` translates true N:N
+            # edges to ``E3012`` / ``E3013`` before they reach here.
+            # The only remaining shape that reaches this handler is a
+            # 1:N fan-trap inside an aggregation query — the spec
+            # surfaces that as ``E_UNSAFE_REAGGREGATION`` (a plan-shape
+            # decomposition failure per D-022).
             if exc.code is ErrorCode.E3011_MN_AGGREGATION_REJECTED:
                 raise OSIPlanningError(
                     ErrorCode.E_UNSAFE_REAGGREGATION,

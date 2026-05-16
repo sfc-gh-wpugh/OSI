@@ -122,12 +122,13 @@ class TestSubstituteParameters:
     def test_none_expression_still_validates_provided_names(self) -> None:
         ctx = _ctx()
         # No expression, but invalid provided name → still must reject.
-        with pytest.raises(OSIPlanningError):
+        with pytest.raises(OSIPlanningError) as excinfo:
             substitute_parameters(
                 None,
                 provided={normalize_identifier("nope"): 1},
                 declared=ctx.model.parameters,
             )
+        assert excinfo.value.code is ErrorCode.E2002_NAME_NOT_FOUND
 
     def test_plan_level_parameter_substitution_produces_filter_step(self) -> None:
         ctx = _ctx()

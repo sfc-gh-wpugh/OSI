@@ -16,6 +16,7 @@ from __future__ import annotations
 import importlib
 import inspect
 import pkgutil
+import re
 
 import pytest
 
@@ -133,5 +134,52 @@ class TestExceptionHierarchyInvariant:
             "These exception classes live under osi.* but do not inherit from "
             "OSIError. Either fix the inheritance or extend "
             "_NON_OSI_EXCEPTION_ALLOWLIST with rationale:\n  "
+            + "\n  ".join(violations)
+        )
+
+
+class TestPytestRaisesPinsCode:
+    """Meta-test: every ``pytest.raises(OSI*)`` call pins ``.code``.
+
+    The Phase 8c review flagged a hole where ``pytest.raises(OSIError)``
+    blocks landed without an ``error.code is ErrorCode.…`` follow-up,
+    leaving the test type-wide and silently false-positive on the
+    wrong code. This meta-test scans every test file under ``tests/``
+    and asserts that within twelve lines of every typed ``pytest.raises``
+    block there is a ``.code`` reference.
+
+    The twelve-line window matches our test style: assertions on
+    ``error.code`` (and any other context) sit immediately under the
+    ``with`` block. If a test legitimately needs a wider window it
+    should be refactored, not the window widened.
+    """
+
+    _OSI_EXCEPTION_PATTERN = re.compile(
+        r"pytest\.raises\((OSI\w*|AlgebraError|OSIWarning)\)"
+    )
+    _WINDOW_LINES = 12
+
+    def test_pytest_raises_typed_exception_always_pins_code(self) -> None:
+        import pathlib
+
+        tests_root = pathlib.Path(__file__).resolve().parents[1]
+        violations: list[str] = []
+        for path in sorted(tests_root.rglob("*.py")):
+            text = path.read_text()
+            lines = text.splitlines()
+            for idx, line in enumerate(lines):
+                if not self._OSI_EXCEPTION_PATTERN.search(line):
+                    continue
+                window = "\n".join(lines[idx + 1 : idx + 1 + self._WINDOW_LINES])
+                if ".code" not in window:
+                    rel = path.relative_to(tests_root)
+                    violations.append(f"{rel}:{idx + 1}: {line.strip()}")
+        assert not violations, (
+            "These pytest.raises blocks catch an OSI-typed exception but "
+            "do not pin error.code within the next {n} lines. Either add "
+            "an explicit `.code is ErrorCode.…` assertion or refactor the "
+            "test to keep the assertion close to the raise:\n  ".format(
+                n=self._WINDOW_LINES
+            )
             + "\n  ".join(violations)
         )

@@ -130,7 +130,8 @@ def test_cte_name_rejects_invalid_prefix_via_identifier_rules() -> None:
     # OSIError hierarchy and clients can route on it. Catching the
     # generic ``Exception`` would have allowed any TypeError /
     # AttributeError regression to silently pass.
-    from osi.errors import OSIError
+    from osi.errors import ErrorCode, OSIError
 
-    with pytest.raises(OSIError):
+    with pytest.raises(OSIError) as excinfo:
         cte_name("1bad", 0)
+    assert excinfo.value.code is ErrorCode.E1005_IDENTIFIER_INVALID
