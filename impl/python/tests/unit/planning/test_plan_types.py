@@ -13,6 +13,7 @@ from sqlglot import expressions as exp
 
 from osi.common.identifiers import normalize_identifier
 from osi.common.sql_expr import FrozenSQL
+from osi.errors import ErrorCode, OSIError
 from osi.planning.algebra.operations import FilterMode, JoinType
 from osi.planning.algebra.state import (
     AggregateFunction,
@@ -159,13 +160,19 @@ class TestQueryPlanInvariants:
             state=_source_state(),
             payload=ProjectPayload(columns=(normalize_identifier("id"),)),
         )
-        with pytest.raises(ValueError, match="unplanned input"):
+        with pytest.raises(OSIError) as exc_info:
             QueryPlan(steps=(s1, s2), root_step_id=1)
+        assert exc_info.value.code is ErrorCode.E_INTERNAL_INVARIANT
+        assert exc_info.value.context["step_id"] == 1
+        assert exc_info.value.context["unplanned_input"] == 99
 
     def test_root_must_be_a_declared_step(self) -> None:
         s1 = self._source_step(step_id=0)
-        with pytest.raises(ValueError, match="is not a step"):
+        with pytest.raises(OSIError) as exc_info:
             QueryPlan(steps=(s1,), root_step_id=42)
+        assert exc_info.value.code is ErrorCode.E_INTERNAL_INVARIANT
+        assert exc_info.value.context["root_step_id"] == 42
+        assert 0 in exc_info.value.context["step_ids"]
 
     def test_root_property_returns_root_step(self) -> None:
         s1 = self._source_step(step_id=0)

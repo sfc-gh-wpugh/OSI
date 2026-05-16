@@ -21,6 +21,7 @@ from __future__ import annotations
 from typing import Any
 
 from osi.common.identifiers import Identifier
+from osi.errors import ErrorCode, OSIError
 from osi.planning.joins import find_enrichment_path
 from osi.planning.planner_context import PlannerContext
 from osi.planning.resolve import (
@@ -111,7 +112,14 @@ def resolve_json(query: SemanticQuery, context: PlannerContext) -> dict[str, Any
             path = find_enrichment_path(
                 root=fact_ds, targets=targets, graph=context.graph
             )
-        except Exception:
+        except OSIError:
+            # An unresolvable join path is a *normal* outcome for a
+            # diagnostics view — the user may be inspecting an
+            # under-modelled query. We skip the unreachable target
+            # rather than abort the report. Any other exception
+            # type is a compiler bug and must propagate so the
+            # property test "every failure carries a code" can
+            # surface it.
             continue
         for step in path:
             name = str(step.edge.name)
@@ -160,8 +168,12 @@ def _reference_entry(ref: Reference, resolved: ResolvedReference) -> dict[str, A
             "expression": resolved.field.expression.canonical,
             "kind": resolved.field.role.value,
         }
-    raise TypeError(  # pragma: no cover — exhaustive above
-        f"unknown resolved reference: {type(resolved).__name__}"
+    raise OSIError(  # pragma: no cover — exhaustive above
+        ErrorCode.E_INTERNAL_INVARIANT,
+        f"unknown resolved reference: {type(resolved).__name__} — "
+        "every ResolvedReference subclass must have a case in "
+        "_reference_entry",
+        context={"resolved_type": type(resolved).__name__},
     )
 
 

@@ -40,6 +40,7 @@ from typing import Any, Mapping, Optional
 from osi.common.identifiers import Identifier
 from osi.common.sql_expr import FrozenSQL
 from osi.common.types import DimensionSet
+from osi.errors import ErrorCode, OSIError
 from osi.planning.algebra.operations import FilterMode, JoinType
 from osi.planning.algebra.state import CalculationState, Column
 
@@ -264,17 +265,37 @@ class QueryPlan:
     output_aliases: tuple[tuple[Identifier, Identifier], ...] = ()
 
     def __post_init__(self) -> None:
-        """Verify topological ordering and root ID invariants."""
+        """Verify topological ordering and root ID invariants.
+
+        Violations here are not user-facing — they mean a planner pass
+        produced an inconsistent ``QueryPlan``. We surface the failure
+        through the typed-error channel (``E_INTERNAL_INVARIANT``) so
+        the "every failure carries a code" property test still holds.
+        """
         seen: set[int] = set()
         for step in self.steps:
             for dep in step.inputs:
                 if dep not in seen:
-                    raise ValueError(
-                        f"step {step.step_id} references unplanned input {dep}"
+                    raise OSIError(
+                        ErrorCode.E_INTERNAL_INVARIANT,
+                        f"step {step.step_id} references unplanned "
+                        f"input {dep} (steps must be topologically "
+                        "ordered)",
+                        context={
+                            "step_id": step.step_id,
+                            "unplanned_input": dep,
+                        },
                     )
             seen.add(step.step_id)
         if self.root_step_id not in seen:
-            raise ValueError(f"root_step_id {self.root_step_id} is not a step")
+            raise OSIError(
+                ErrorCode.E_INTERNAL_INVARIANT,
+                f"root_step_id {self.root_step_id} is not a step in " "this plan",
+                context={
+                    "root_step_id": self.root_step_id,
+                    "step_ids": sorted(seen),
+                },
+            )
 
     @property
     def root(self) -> PlanStep:
@@ -397,7 +418,12 @@ def _payload_to_json(payload: PlanPayload) -> Mapping[str, Any]:
             "kind": "broadcast",
             "column": _column_to_json(payload.column),
         }
-    raise TypeError(f"unknown payload type: {type(payload).__name__}")
+    raise OSIError(
+        ErrorCode.E_INTERNAL_INVARIANT,
+        f"unknown payload type: {type(payload).__name__} — every "
+        "PlanPayload subclass must have a case in _payload_to_json",
+        context={"payload_type": type(payload).__name__},
+    )
 
 
 __all__ = [

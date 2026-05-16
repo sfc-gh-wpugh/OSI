@@ -99,6 +99,13 @@ _IMPLEMENTATION_EXTENSIONS: dict[str, str] = {
         "Implementation invariant — sibling of E_RESERVED_IDENTIFIER, "
         "for model-level name collisions with OSI internals."
     ),
+    "E_INTERNAL_INVARIANT": (
+        "Compiler-bug signal — raised when the IR or a diagnostic "
+        "detects an out-of-sync invariant (orphan plan input, "
+        "unhandled payload subclass, unhandled resolved-reference "
+        "subclass). Lives inside OSIError so the typed-error "
+        "property test still holds for these paths."
+    ),
 }
 
 

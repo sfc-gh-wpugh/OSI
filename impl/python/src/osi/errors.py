@@ -143,6 +143,18 @@ class ErrorCode(StrEnum):
     # pre-aggregation-unsafe case. See
     # ``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``.
     E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE = "E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE"
+    # Implementation extension — raised when the IR or a diagnostic
+    # detects a *programmer* error, never a user error. Examples:
+    # a ``QueryPlan`` whose step DAG is not topologically sorted
+    # (``plan.py:__post_init__``); a payload subclass that has no
+    # JSON-encoder case (``_payload_to_json``); a resolved reference
+    # subclass that has no ``_reference_entry`` case
+    # (``diagnostics/resolve.py``). The shape of the error means
+    # "the compiler invariants are out of sync; ship a fix" rather
+    # than "your model is wrong"; keeping it inside the typed
+    # ``OSIError`` hierarchy means our property tests ("every failure
+    # carries a code") still hold for these paths.
+    E_INTERNAL_INVARIANT = "E_INTERNAL_INVARIANT"
 
     # E12xx — SQL-surface errors (see
     # ../../../proposals/foundation-v0.1/SQL_INTERFACE.md §8).

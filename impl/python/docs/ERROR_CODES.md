@@ -94,6 +94,7 @@ annotation here matches the enum in `src/osi/errors.py`.
 | `E_PRIMARY_KEY_REQUIRED` | RESERVED | `PRIMARY_KEY_REQUIRED` | Engines MAY require `primary_key` declarations on every dataset (so the table grain is well-defined). The reference implementation does not impose this requirement today, but the code is reserved so an opt-in deployment can raise it under a stable name. (Appendix C / §4.2.) |
 | `E_INVALID_NATURAL_GRAIN` | RESERVED | `INVALID_NATURAL_GRAIN` | Raised by a future `natural_grain` implementation (currently deferred). The Foundation parser rejects the `natural_grain` key through `E_DEFERRED_KEY_REJECTED` today. See `proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md`. |
 | `E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE` | RESERVED | `NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE` | Sibling of `E_INVALID_NATURAL_GRAIN` for the unsafe pre-aggregation case. Reserved until natural-grain lands. |
+| `E_INTERNAL_INVARIANT` | active | `INTERNAL_INVARIANT` | Implementation extension — the IR or a diagnostic detected a programmer error (e.g. a `QueryPlan` whose steps reference an unplanned input, an unhandled `PlanPayload` subclass in `_payload_to_json`, an unhandled `ResolvedReference` subclass in `_reference_entry`). The shape of the error means "the compiler invariants are out of sync; ship a fix" rather than "your model is wrong". Kept inside the typed `OSIError` hierarchy so the property test "every failure carries a code" still holds for these paths. Not in Appendix C. |
 
 ## `E12xx` — SQL-surface errors
 

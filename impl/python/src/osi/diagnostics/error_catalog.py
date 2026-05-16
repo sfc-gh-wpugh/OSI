@@ -285,6 +285,18 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
         "pre-aggregation-unsafe case. See "
         "``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``."
     ),
+    ErrorCode.E_INTERNAL_INVARIANT: (
+        "Implementation extension — the IR or a diagnostic detected a "
+        "*programmer* error, never a user error. Examples: a "
+        "``QueryPlan`` whose step DAG is not topologically sorted; a "
+        "``PlanPayload`` subclass with no JSON-encoder case; a "
+        "``ResolvedReference`` subclass with no entry mapper. The "
+        "shape of the error means 'compiler invariants are out of "
+        "sync — ship a fix' rather than 'your model is wrong'. "
+        "Kept inside the typed ``OSIError`` hierarchy so the "
+        "property invariant 'every failure carries a code' still "
+        "holds for these paths. (Spec: implementation extension.)"
+    ),
     ErrorCode.E_WINDOW_OVER_FANOUT_REWRITE: (
         "A window function would be evaluated over a fan-out join — "
         "the partition key includes a column from a 1:N enrichment "
