@@ -212,8 +212,12 @@ class TestSemanticModel:
         assert exc.value.code is ErrorCode.E2003_DUPLICATE_NAME
 
     def test_defaults(self) -> None:
+        # B4 (Phase 3 review): the spec mandates ``OSI_SQL_2026`` as the
+        # default dialect (Foundation §1 + SQL_EXPRESSION_SUBSET.md).
+        # Omitting ``dialect:`` in YAML therefore parses to
+        # ``Dialect.OSI_SQL_2026``, not the codegen-target ``ANSI``.
         model = SemanticModel(name="x", datasets=[_minimal_dataset()])
-        assert model.dialect is Dialect.ANSI
+        assert model.dialect is Dialect.OSI_SQL_2026
         assert model.metrics == ()
         assert model.filters == ()
         assert model.parameters == ()

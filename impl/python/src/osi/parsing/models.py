@@ -391,7 +391,7 @@ class SemanticModel(_Strict):
     """Top-level semantic model (``§4.1``)."""
 
     name: Identifier
-    dialect: Dialect = Dialect.ANSI
+    dialect: Dialect = Dialect.OSI_SQL_2026
     datasets: tuple[Dataset, ...]
     relationships: tuple[Relationship, ...] = ()
     metrics: tuple[Metric, ...] = ()
