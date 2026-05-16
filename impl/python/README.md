@@ -135,6 +135,30 @@ sql = compile_plan(plan(query, context), dialect=Dialect.DUCKDB)
 print(sql)
 ```
 
+For runnable end-to-end scenarios (a model + a query + a `osi compile`
+command), see [`examples/`](examples/README.md).
+
+## Opting back into deferred features
+
+A few decisions in `Proposed_OSI_Semantics.md` are deferred but the
+implementation keeps the *opt-back-in* path behind a feature-flag
+object. Use it when migrating an existing model that still relies on
+the legacy form:
+
+```python
+from osi.config import FoundationFlags
+from osi.parsing.parser import parse_semantic_model
+
+result = parse_semantic_model(
+    "model.yaml",
+    flags=FoundationFlags(allow_aggregate_in_field=True),
+)
+```
+
+The flags are documented in [`src/osi/config.py`](src/osi/config.py).
+Models that turn flags on are no longer portable — the canonical
+Foundation v0.1 stance is `flags=None` (the default).
+
 ---
 
 ## Repository layout

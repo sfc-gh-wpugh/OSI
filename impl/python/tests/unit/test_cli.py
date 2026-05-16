@@ -180,3 +180,67 @@ def test_cli__reports_osi_errors_via_stderr(
     assert rc == 2
     err = capsys.readouterr().err
     assert err.startswith("E")
+
+
+def test_cli__surfaces_osi_error_context_under_message(
+    capsys, tmp_path: Path, model_path: Path
+) -> None:
+    """CLI surfaces ``OSIError.context`` after the ``code: message`` line.
+
+    Phase 10 P1 (10b I1): structured ``OSIError.context`` is part of the
+    user-facing diagnostic. The CLI prints it as an indented
+    ``context:`` block immediately after the ``code: message`` line so
+    authors debugging from a terminal see the same actionable hints
+    Python callers would see via ``error.context``.
+    """
+    from osi.errors import ErrorCode, OSIError
+
+    # The CLI surfaces err.context when it is non-empty. We exercise
+    # this by injecting a raise via main()'s subcommand dispatch.
+    err_with_context = OSIError(
+        ErrorCode.E_NAME_NOT_FOUND,
+        "orders.no_such_metric did not resolve",
+        context={"name": "no_such_metric", "dataset": "orders"},
+    )
+
+    from osi import cli as cli_module
+
+    def _raise_error(_args: object) -> int:
+        raise err_with_context
+
+    saved = cli_module._cmd_explain_code  # type: ignore[attr-defined]
+    cli_module._cmd_explain_code = _raise_error  # type: ignore[attr-defined]
+    try:
+        rc = main(["explain-code", "ANY"])
+    finally:
+        cli_module._cmd_explain_code = saved  # type: ignore[attr-defined]
+    assert rc == 2
+    err = capsys.readouterr().err
+    lines = err.splitlines()
+    assert lines[0].startswith("E_NAME_NOT_FOUND:"), lines[0]
+    assert "context:" in err, "expected an indented context: block in stderr"
+    assert "no_such_metric" in err
+    assert "orders" in err
+
+
+def test_cli__omits_context_block_when_context_is_empty(capsys) -> None:
+    """An empty ``OSIError.context`` produces no ``context:`` block.
+
+    The short happy-path failure output stays unchanged so we do not emit
+    a spurious empty ``context:`` block.
+    """
+    from osi import cli as cli_module
+    from osi.errors import ErrorCode, OSIError
+
+    def _raise_error(_args: object) -> int:
+        raise OSIError(ErrorCode.E1001_YAML_SYNTAX, "boom")
+
+    saved = cli_module._cmd_explain_code  # type: ignore[attr-defined]
+    cli_module._cmd_explain_code = _raise_error  # type: ignore[attr-defined]
+    try:
+        rc = main(["explain-code", "ANY"])
+    finally:
+        cli_module._cmd_explain_code = saved  # type: ignore[attr-defined]
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert err == "E1001: boom\n"

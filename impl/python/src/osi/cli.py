@@ -279,6 +279,16 @@ def main(argv: list[str] | None = None) -> int:
         return int(args.func(args))
     except OSIError as err:
         sys.stderr.write(f"{err.code.value}: {err}\n")
+        # Phase 10 P1 (10b I1): surface the structured ``context`` dict
+        # from :class:`OSIError`. Authors hitting an error from the CLI
+        # previously lost actionable hints (suggested fix, candidate
+        # names, dataset / field / grain) because the handler only
+        # serialised the message. Empty contexts stay quiet so the
+        # short happy-path failure output is unchanged.
+        if err.context:
+            sys.stderr.write("  context:\n")
+            for key, value in sorted(err.context.items()):
+                sys.stderr.write(f"    {key}: {value!r}\n")
         return 2
 
 

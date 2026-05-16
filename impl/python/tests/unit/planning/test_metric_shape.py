@@ -201,7 +201,9 @@ class TestCompositeDetection:
 
 
 class TestUnsupportedTopLevelAggregate:
-    """The OSI_SQL_2026 parse whitelist names aggregate functions that
+    """Reject whitelisted-but-unimplemented aggregates with a clear error.
+
+    The OSI_SQL_2026 parse whitelist names aggregate functions that
     the planner does not yet lower (``MEDIAN``, ``STDDEV``,
     ``PERCENTILE_CONT``, …). Without an explicit rejection, the
     composite-classification path mistakes them for non-aggregate
@@ -244,8 +246,11 @@ class TestUnsupportedTopLevelAggregate:
             assert isinstance(shape, AggregateMetric)
 
     def test_count_distinct_still_classifies_as_count(self) -> None:
-        """``COUNT(DISTINCT x)`` is wrapped under ``exp.Count`` and so
-        must reach the supported branch, not the new rejection path."""
+        """``COUNT(DISTINCT x)`` must reach the supported branch.
+
+        It is wrapped under ``exp.Count`` and so must not be diverted to
+        the new rejection path.
+        """
         ctx = _model()
         shape = classify_metric(
             _metric_by_name(ctx, "distinct_customers"), ctx.namespace

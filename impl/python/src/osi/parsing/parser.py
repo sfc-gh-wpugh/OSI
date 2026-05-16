@@ -36,8 +36,8 @@ from osi.config import FoundationFlags
 from osi.errors import ErrorCode, OSIParseError
 from osi.parsing._root import unwrap_model_root
 from osi.parsing.deferred import check_expression_deferred, check_yaml_deferred
-from osi.parsing.function_whitelist import check_expression_functions
 from osi.parsing.foundation import check_foundation_strictness
+from osi.parsing.function_whitelist import check_expression_functions
 from osi.parsing.graph import RelationshipGraph, build_graph
 from osi.parsing.models import Field, Metric, NamedFilter, SemanticModel
 from osi.parsing.namespace import Namespace, build_namespace

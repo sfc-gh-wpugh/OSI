@@ -133,8 +133,7 @@ class TestExceptionHierarchyInvariant:
         assert not violations, (
             "These exception classes live under osi.* but do not inherit from "
             "OSIError. Either fix the inheritance or extend "
-            "_NON_OSI_EXCEPTION_ALLOWLIST with rationale:\n  "
-            + "\n  ".join(violations)
+            "_NON_OSI_EXCEPTION_ALLOWLIST with rationale:\n  " + "\n  ".join(violations)
         )
 
 

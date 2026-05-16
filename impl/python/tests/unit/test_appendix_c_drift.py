@@ -118,9 +118,7 @@ def test_every_named_enum_member_is_documented() -> None:
     A member is documented if it is either in Appendix C or is
     explicitly listed as an implementation extension above.
     """
-    named_enum_codes = {
-        code.value for code in ErrorCode if code.value.startswith("E_")
-    }
+    named_enum_codes = {code.value for code in ErrorCode if code.value.startswith("E_")}
     spec_codes = {c for c in _APPENDIX_C_CODES if c.startswith("E_")}
     extensions = set(_IMPLEMENTATION_EXTENSIONS)
     undocumented = sorted(named_enum_codes - spec_codes - extensions)

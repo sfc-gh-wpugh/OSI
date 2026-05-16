@@ -246,9 +246,7 @@ def cmd_sql(args: argparse.Namespace) -> int:
         if aliases:
             from dataclasses import replace as _replace
 
-            from osi.common.identifiers import (
-                normalize_identifier as _norm,
-            )
+            from osi.common.identifiers import normalize_identifier as _norm
 
             compiled_plan = _replace(
                 compiled_plan,
