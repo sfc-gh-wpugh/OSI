@@ -31,6 +31,7 @@ from enum import StrEnum, auto
 
 from osi.common.identifiers import Identifier
 from osi.common.types import DimensionSet
+from osi.errors import ErrorCode, OSIError
 
 
 class OperatorTag(StrEnum):
@@ -135,12 +136,19 @@ _PRESERVING_TAGS: frozenset[OperatorTag] = frozenset(
 )
 
 
-class GrainSimulationError(ValueError):
+class GrainSimulationError(OSIError):
     """Raised when a step sequence is malformed (e.g. no leading SOURCE).
 
-    This is not an ``OSIError`` because it is a bug in test plumbing —
-    real compiler flows always start with ``source``.
+    Carries :data:`ErrorCode.E_INTERNAL_INVARIANT` because the failure
+    means the symbolic simulator was driven with a malformed input —
+    the real compiler flows always start with ``source`` and stitch
+    operators in valid order. Keeping the simulator inside the typed
+    ``OSIError`` hierarchy means the "every failure carries a code"
+    invariant the architecture tests rely on holds for this path too.
     """
+
+    def __init__(self, message: str) -> None:
+        super().__init__(ErrorCode.E_INTERNAL_INVARIANT, message)
 
 
 def simulate(steps: tuple[Step, ...]) -> SimState:

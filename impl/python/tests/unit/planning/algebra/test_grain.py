@@ -11,6 +11,7 @@ from __future__ import annotations
 import pytest
 
 from osi.common.identifiers import normalize_identifier
+from osi.errors import ErrorCode, OSIError
 from osi.planning.algebra.grain import (
     AggregateStep,
     BroadcastStep,
@@ -58,40 +59,59 @@ class TestSimulateGrain:
             SourceStep(OperatorTag.SOURCE, frozenset({I("a")})),
             AggregateStep(OperatorTag.AGGREGATE, frozenset({I("b")})),
         )
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(steps)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
     def test_merge_requires_matching_grain(self):
         steps = (
             SourceStep(OperatorTag.SOURCE, frozenset({I("a")})),
             MergeStep(OperatorTag.MERGE, frozenset({I("b")})),
         )
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(steps)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
     def test_empty_sequence_rejected(self):
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(())
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
     def test_missing_source_rejected(self):
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain((SimpleStep(OperatorTag.FILTER),))
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
     def test_source_after_start_rejected(self):
         steps = (
             SourceStep(OperatorTag.SOURCE, frozenset({I("a")})),
             SourceStep(OperatorTag.SOURCE, frozenset({I("b")})),
         )
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(steps)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
     def test_simple_step_with_wrong_tag_rejected(self):
         steps = (
             SourceStep(OperatorTag.SOURCE, frozenset({I("a")})),
             SimpleStep(OperatorTag.AGGREGATE),
         )
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(steps)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
+
+    def test_grain_simulation_error_is_an_osi_error(self):
+        """Architecture invariant: every OSI failure is an ``OSIError``.
+
+        ``GrainSimulationError`` used to subclass ``ValueError`` which
+        meant grain-simulator failures slipped past the typed-error
+        architecture test. Pinning the inheritance here prevents the
+        regression.
+        """
+        with pytest.raises(OSIError) as excinfo:
+            simulate_grain(())
+        assert isinstance(excinfo.value, GrainSimulationError)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
 
 class TestEnrichBroadcastSimulation:
@@ -158,8 +178,9 @@ class TestEnrichBroadcastSimulation:
             EnrichStep(OperatorTag.ENRICH, adds=frozenset({I("region")})),
             AggregateStep(OperatorTag.AGGREGATE, frozenset({I("nope")})),
         )
-        with pytest.raises(GrainSimulationError):
+        with pytest.raises(GrainSimulationError) as excinfo:
             simulate_grain(steps)
+        assert excinfo.value.code is ErrorCode.E_INTERNAL_INVARIANT
 
 
 class TestIsCoarser:

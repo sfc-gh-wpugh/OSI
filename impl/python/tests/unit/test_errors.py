@@ -6,12 +6,20 @@ Invariants (per ``ARCHITECTURE.md §7``):
    with a stable code.
 2. Tests assert on ``error.code``, never on message text. This file
    double-checks that assertion remains mechanically possible.
+3. Every ``Exception`` subclass declared anywhere under ``osi.*`` is
+   itself an ``OSIError`` (or explicitly allow-listed). The arch test
+   below walks every loaded ``osi`` module and enforces this.
 """
 
 from __future__ import annotations
 
+import importlib
+import inspect
+import pkgutil
+
 import pytest
 
+import osi
 from osi.errors import (
     AlgebraError,
     ErrorCode,
@@ -68,3 +76,62 @@ class TestOSIError:
         err = cls(ErrorCode.E1001_YAML_SYNTAX, "x")
         assert isinstance(err, OSIError)
         assert err.code is ErrorCode.E1001_YAML_SYNTAX
+
+
+# Allow-list of exception classes that are intentionally not ``OSIError``.
+# This must stay empty unless there is a documented reason (e.g. an
+# adapter-boundary translation class that wraps a third-party SDK error).
+_NON_OSI_EXCEPTION_ALLOWLIST: frozenset[str] = frozenset()
+
+
+def _walk_osi_exception_classes() -> list[type[BaseException]]:
+    """Import every module under ``osi.*`` and return every Exception class.
+
+    Only classes whose ``__module__`` starts with ``osi.`` are returned —
+    re-exports of ``Exception``/``ValueError`` etc. are filtered out.
+    ``__main__`` modules are skipped because importing them executes
+    their CLI entry point.
+    """
+    seen: set[type[BaseException]] = set()
+    package_path = osi.__path__
+    for module_info in pkgutil.walk_packages(package_path, prefix="osi."):
+        if module_info.name.endswith(".__main__"):
+            continue
+        try:
+            module = importlib.import_module(module_info.name)
+        except Exception:
+            continue
+        for _name, obj in inspect.getmembers(module, inspect.isclass):
+            if not issubclass(obj, BaseException):
+                continue
+            if not obj.__module__.startswith("osi."):
+                continue
+            seen.add(obj)
+    return sorted(seen, key=lambda c: f"{c.__module__}.{c.__qualname__}")
+
+
+class TestExceptionHierarchyInvariant:
+    """Architecture test: every osi.* Exception is an OSIError.
+
+    Regression guard for the Phase 8c finding that
+    ``GrainSimulationError`` subclassed ``ValueError`` and slipped past
+    the typed-error doctrine. Adding a new ``Exception`` subclass under
+    ``osi.*`` is now a deliberate act: either inherit from ``OSIError``
+    or add the fully qualified name to ``_NON_OSI_EXCEPTION_ALLOWLIST``
+    with a comment explaining why.
+    """
+
+    def test_every_osi_exception_inherits_from_osi_error(self) -> None:
+        violations: list[str] = []
+        for cls in _walk_osi_exception_classes():
+            qualname = f"{cls.__module__}.{cls.__qualname__}"
+            if qualname in _NON_OSI_EXCEPTION_ALLOWLIST:
+                continue
+            if not issubclass(cls, OSIError):
+                violations.append(qualname)
+        assert not violations, (
+            "These exception classes live under osi.* but do not inherit from "
+            "OSIError. Either fix the inheritance or extend "
+            "_NON_OSI_EXCEPTION_ALLOWLIST with rationale:\n  "
+            + "\n  ".join(violations)
+        )
