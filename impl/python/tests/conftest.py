@@ -1,4 +1,4 @@
-"""Shared pytest fixtures for osi_python.
+"""Shared pytest fixtures for the OSI Python reference implementation.
 
 Fixtures live here rather than per-layer so that property tests, unit
 tests, golden tests, and E2E tests can all share the same generation

@@ -11,8 +11,8 @@ These tests pin the three observable outcomes of
    (``E2004`` / ``E3011``) — never a silent fan-trap.
 
    FIXME(spec-alignment): Under ``Proposed_OSI_Semantics.md §6.8
-   *Semantic guarantee*`` an M:N-supporting engine (which
-   ``osi_python`` is) MUST NOT raise ``E3011`` at the user-facing
+   *Semantic guarantee*`` an M:N-supporting engine (which this
+   implementation is) MUST NOT raise ``E3011`` at the user-facing
    surface — that code is reserved for engine-level M:N opt-outs.
    The dim-only path currently leaks the algebra-internal
    ``E3011`` precondition signal unchanged, while the measure-

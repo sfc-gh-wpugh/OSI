@@ -139,7 +139,7 @@ qualify — paste the seed and the shrunk input.
 - Infra / tooling → GitHub issues tagged `infra`.
 - Implementation discussion → PR comments.
 - Breaking Foundation scope (adding a deferred feature) → a proposal PR
-  against `specs/Proposed_OSI_Semantics.md` before the implementation PR.
+  against `../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md` before the implementation PR.
 
 ---
 

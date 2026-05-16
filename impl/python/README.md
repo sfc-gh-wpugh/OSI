@@ -238,7 +238,7 @@ Recently completed Foundation work (see `INFRA.md §3`):
 Remaining Foundation gaps:
 
 - `SEMANTIC_VIEW(...)` SQL surface — specification complete in
-  [`specs/SQL_INTERFACE.md`](specs/SQL_INTERFACE.md); parser not yet
+  [`../../proposals/foundation-v0.1/SQL_INTERFACE.md`](../../proposals/foundation-v0.1/SQL_INTERFACE.md); parser not yet
   implemented. Tracked as `INFRA.md §3 I-12`. Error codes
   `E1201`–`E1213` are carved out in `osi.errors` with `RESERVED`
   annotations so the eventual parser lands with stable codes.

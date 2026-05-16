@@ -1,8 +1,9 @@
 """The closed algebra — the correctness boundary of the compiler.
 
 All compiler transformations must compose operators from this module.
-See ``../../../specs/JOIN_ALGEBRA.md`` for operator signatures,
-preconditions, grain contracts, and laws.
+See ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`` (the
+authoritative spec) for operator signatures, preconditions, grain
+contracts, and laws.
 
 The nine operators and their current planner wiring:
 
@@ -17,10 +18,10 @@ The nine operators and their current planner wiring:
 - :func:`project` — keep only the named columns. *Emitted once at the
   root.*
 - :func:`add_columns` — introduce derived scalar columns. *Emitted only
-  for composite metrics (``Proposed_OSI_Semantics.md §5.4``).*
+  for composite metrics (Foundation spec §5.4).*
 - :func:`merge` — full-outer chasm-safe join at matching grain.
   *Emitted when two measure groups with different fact datasets must
-  be combined (``§4.11``).*
+  be combined (Foundation spec §4.11).*
 - :func:`filtering_join` — semi-/anti-semi-join for ``EXISTS_IN``.
   *Emitted for ``EXISTS_IN`` predicates in ``WHERE``.*
 - :func:`broadcast` — attach a scalar column. **Reserved.** The

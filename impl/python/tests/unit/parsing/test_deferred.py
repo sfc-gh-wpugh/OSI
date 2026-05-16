@@ -1,7 +1,8 @@
 """Unit tests for :mod:`osi.parsing.deferred`.
 
-Every Foundation-deferred feature must raise :class:`ErrorCode.E1105`
-either at the YAML key level or inside a SQL expression.
+Every Foundation-deferred feature must raise
+:class:`ErrorCode.E_DEFERRED_KEY_REJECTED` either at the YAML key
+level or inside a SQL expression.
 """
 
 from __future__ import annotations
@@ -145,9 +146,9 @@ def _frozen(expr: str) -> FrozenSQL:
 
 class TestExpressionDeferred:
     def test_window_function_accepted(self) -> None:
-        # S-22 (D-028 / D-030): valid window functions pass parser
-        # screening; only nested-window (D-031) and deferred frame
-        # modes (D-032) raise their own named codes.
+        # D-028 / D-030: valid window functions pass parser screening;
+        # only nested windows (D-028(c)) and deferred frame modes
+        # (D-032) raise their own named codes.
         expr = _frozen("ROW_NUMBER() OVER (ORDER BY id)")
         check_expression_deferred(expr, where="metric x")
 

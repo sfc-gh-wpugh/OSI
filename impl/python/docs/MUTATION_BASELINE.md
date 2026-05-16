@@ -32,7 +32,8 @@ segfaults — the same issue documented in mutmut's macOS notes,
 even with ``use_setproctitle = false``. Resolution path:
 
 1. Run the baseline sweep on a Linux CI worker (the GitHub Actions
-   workflow `.github/workflows/osi_python.yml` is the hook).
+   workflow `../../../.github/workflows/impl-python-ci.yml` is the
+   hook).
 2. Or pin mutmut to 2.x and revert the config block to the 2.x
    keys (``paths_to_mutate`` / ``runner``).
 

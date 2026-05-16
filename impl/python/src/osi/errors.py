@@ -1,4 +1,4 @@
-"""Typed error hierarchy for osi_python.
+"""Typed error hierarchy for the OSI Python reference implementation.
 
 See ``docs/ERROR_CODES.md`` for the full catalog. Every code listed there
 must have an enum value here before it can be raised in production code.
@@ -119,7 +119,8 @@ class ErrorCode(StrEnum):
     # downstream sqlglot or engine rejection).
     E_UNKNOWN_FUNCTION = "E_UNKNOWN_FUNCTION"  # RESERVED
 
-    # E12xx — SQL-surface errors (see specs/SQL_INTERFACE.md §8).
+    # E12xx — SQL-surface errors (see
+    # ../../../proposals/foundation-v0.1/SQL_INTERFACE.md §8).
     # Only E1206 / E1207 / E1208 / E1209 / E1212 have active emit paths
     # today; the rest are RESERVED for the SEMANTIC_VIEW clause parser.
     E1201_SEMANTIC_VIEW_EMPTY = "E1201"  # RESERVED — SQL_INTERFACE.md §8
@@ -170,7 +171,7 @@ class ErrorCode(StrEnum):
     E3010_CHASM_TRAP = "E3010"
     # E3011 is the engine-capability opt-out code: an engine that does
     # not support M:N traversal at all raises it for every M:N query.
-    # ``osi_python`` is M:N-supporting (per ``Proposed_OSI_Semantics.md``
+    # This reference implementation is M:N-supporting (per ``Proposed_OSI_Semantics.md``
     # §6.8 *Semantic guarantee*); the algebra layer raises ``E3011``
     # internally as a precondition signal on ``N : N`` edges, and the
     # planner translates it to the user-facing per-query codes

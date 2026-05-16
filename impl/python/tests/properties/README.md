@@ -1,7 +1,7 @@
 # Property-based tests
 
 Hypothesis-driven tests that enforce the universal laws of the algebra
-stated in [`../../specs/JOIN_ALGEBRA.md §4`](../../specs/JOIN_ALGEBRA.md#4-laws).
+stated in [`../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`](../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md#4-laws).
 
 See [`../../docs/ALGEBRA_LAWS.md`](../../docs/ALGEBRA_LAWS.md) for the
 complete mapping: law → property statement → test file → mutation
@@ -24,4 +24,4 @@ property tests in this directory are what drives that score.
 A property test that can be made to pass by narrowing the strategy is
 not a property test; it's an example. Narrow only when the original
 property is genuinely wrong as stated — and if it is, fix
-`specs/JOIN_ALGEBRA.md` first, then the test.
+`../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md` first, then the test.

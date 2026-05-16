@@ -4,8 +4,9 @@ Takes a ``SemanticModel`` + ``SemanticQuery`` and produces a frozen
 ``QueryPlan`` — an ordered tuple of ``PlanStep``\s, each wrapping a
 closed-algebra operator over an immutable ``CalculationState``.
 
-See ``../../../ARCHITECTURE.md`` §3 and ``../../../specs/JOIN_ALGEBRA.md``
-for the algebra contract.
+See ``../../../ARCHITECTURE.md`` §3 and
+``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`` for the
+algebra contract.
 """
 
 from osi.planning.algebra import (

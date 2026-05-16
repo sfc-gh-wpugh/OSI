@@ -19,7 +19,7 @@ For the standard itself, see [`../specs/`](../specs/).
 
 | Doc | What it covers |
 |:---|:---|
-| [`ALGEBRA_LAWS.md`](ALGEBRA_LAWS.md) | The companion to [`../specs/JOIN_ALGEBRA.md`](../specs/JOIN_ALGEBRA.md): concrete Hypothesis strategies, property tests, and mutation-testing targets that enforce each algebra law. |
+| [`ALGEBRA_LAWS.md`](ALGEBRA_LAWS.md) | The companion to [`../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md): concrete Hypothesis strategies, property tests, and mutation-testing targets that enforce each algebra law. |
 | [`JOIN_SAFETY.md`](JOIN_SAFETY.md) | Worked examples of fan-trap / chasm-trap detection and the safe rewrites the planner emits. |
 
 ## Testing

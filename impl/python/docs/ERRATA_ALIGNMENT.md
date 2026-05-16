@@ -1,6 +1,6 @@
 # ERRATA_ALIGNMENT.md — How `osi_python` Handles Known BI-Engine Surprises
 
-The Foundation (see `../specs/Proposed_OSI_Semantics.md §12`) was
+The Foundation (see `../../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md §12`) was
 explicitly designed to be free of the surprising behaviors catalogued
 in Snowflake Semantic Views' `ERRATA.md`. This document:
 
@@ -97,7 +97,7 @@ we discover one on our own:
 2. If the disposition is **Resolved**, add at least one test and link it.
 3. If the disposition is **Deferred**, confirm that `E1105 RESERVED_FOR_DEFERRED`
    fires for models/queries that trigger the feature.
-4. If the disposition is **Inherited**, add a note in `specs/SQL_Caller_Examples.md`
+4. If the disposition is **Inherited**, add a note in `../../../proposals/foundation-v0.1/SQL_Caller_Examples.md`
    so callers are aware.
 
 An errata item we cannot map to one of the three dispositions is a

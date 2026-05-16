@@ -2,10 +2,10 @@
 
 **Version:** 0.2 (Updated-Foundation rollout)
 **Status:** Active — sprint roadmap in §11 below
-**Authoritative standard:** [`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md) (`osi_version: "0.1"`)
-**Expression language:** [`specs/SQL_EXPRESSION_SUBSET.md`](specs/SQL_EXPRESSION_SUBSET.md) (`OSI_SQL_2026` is the default dialect)
-**Algebra contract:** [`specs/JOIN_ALGEBRA.md`](specs/JOIN_ALGEBRA.md)
-**Conformance vectors:** [`specs/DATA_TESTS.md`](specs/DATA_TESTS.md) (`T-NNN` test catalog) — referenced from `Proposed_OSI_Semantics.md` Appendix B.
+**Authoritative standard:** [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) (`osi_version: "0.1"`)
+**Expression language:** [`../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md) (`OSI_SQL_2026` is the default dialect)
+**Algebra contract:** [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md)
+**Conformance vectors:** [`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) (`T-NNN` test catalog) — referenced from `Proposed_OSI_Semantics.md` Appendix B.
 **Compliance test suite:** [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/) (separate top-level project; see §11.1 of the Foundation spec).
 **Infrastructure & quality contract:** [`INFRA.md`](INFRA.md)
 
@@ -49,7 +49,7 @@ this document to match.
 
 `osi_python` is a **second reference implementation** of Open Semantic
 Interchange. It is NOT a rewrite of `osi_impl`. Its purpose is to
-implement the [Foundation](specs/Proposed_OSI_Semantics.md) — a deliberately
+implement the [Foundation](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) — a deliberately
 smaller standard — with three hard commitments that the first
 implementation only partially delivered:
 
@@ -57,10 +57,10 @@ implementation only partially delivered:
    is expressible as a composition of operators from a closed algebra with
    explicit preconditions and grain contracts. Correctness reduces to
    correctness of the algebra; the algebra is checked with property-based
-   tests and guarded with mutation testing. See [`specs/JOIN_ALGEBRA.md`](specs/JOIN_ALGEBRA.md).
+   tests and guarded with mutation testing. See [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
 2. **Failure is explicit.** Any semantics the compiler cannot compile
    correctly raise a typed `OSIError` whose `error.code` is a value from
-   Appendix C of [`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md).
+   Appendix C of [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md).
    Silent wrong SQL is the single worst possible outcome and is designed out.
 3. **The Foundation stays thin.** Deferred features (§3 below) raise
    `E_DEFERRED_KEY_REJECTED` at parse time. The codebase contains no
@@ -91,7 +91,7 @@ implementation only partially delivered:
 
 ## 2. What is in scope (Foundation)
 
-Authoritative definition lives in [`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md).
+Authoritative definition lives in [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md).
 The Foundation declares `osi_version: "0.1"`. Summary for this SPEC:
 
 ### 2.1 Semantic model
@@ -207,7 +207,7 @@ Standard SQL window functions are part of the Foundation (§6.10):
 ### 2.5 SQL subset
 
 The expression language is defined normatively in
-[`specs/SQL_EXPRESSION_SUBSET.md`](specs/SQL_EXPRESSION_SUBSET.md).
+[`../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md).
 The default dialect for un-annotated expressions is **`OSI_SQL_2026`**
 (D-021). Field and metric `expression` slots accept either a bare string
 in the default dialect or the structured per-dialect form
@@ -241,14 +241,14 @@ The Foundation defines two levels; `osi_python` targets Level 2.
 | L2 (Plan + Render) | Any valid model + Foundation query produces a deterministic plan and compiles to correct SQL on at least one dialect (DuckDB for correctness, Snowflake/BigQuery for portability). Per-engine determinism (D-014) MUST hold; cross-engine SQL determinism is NOT required. |
 
 The canonical compliance vectors live in
-[`specs/DATA_TESTS.md`](specs/DATA_TESTS.md) and the runnable suite in
+[`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) and the runnable suite in
 [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/).
 
 ---
 
 ## 3. What is out of scope (deferred)
 
-Authoritative deferred-features list: §10 of `specs/Proposed_OSI_Semantics.md`.
+Authoritative deferred-features list: §10 of `../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`.
 Design archive: [`specs/deferred/`](specs/deferred/).
 
 Summary:
@@ -326,14 +326,14 @@ deliberately.
 
 > **Every transformation of a calculation is a total, pure, deterministic
 > function on an immutable `CalculationState`. The nine operators of
-> [`specs/JOIN_ALGEBRA.md`](specs/JOIN_ALGEBRA.md) are the complete set
+> [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) are the complete set
 > of transformations. A plan is a sequence of those operators. If an
 > operator's precondition cannot be proved at plan-build time, the planner
 > raises a typed `OSIError` and builds no plan.**
 
 ### 5.2 The nine operators
 
-Full signatures and grain contracts in [`specs/JOIN_ALGEBRA.md §3`](specs/JOIN_ALGEBRA.md#3-operators):
+Full signatures and grain contracts in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §3`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md#3-operators):
 
 | Operator | Grain effect | Preconditions |
 |:---|:---|:---|
@@ -351,7 +351,7 @@ Full signatures and grain contracts in [`specs/JOIN_ALGEBRA.md §3`](specs/JOIN_
 
 Twelve universal laws (totality, purity, determinism, grain closure,
 idempotences, commutativities, associativities, safety rules). Each law
-is stated in [`specs/JOIN_ALGEBRA.md §4`](specs/JOIN_ALGEBRA.md#4-laws)
+is stated in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md#4-laws)
 and checked by a Hypothesis property test under `tests/properties/`. See
 [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md) for the mapping from law
 to test to mutation-testing target.
@@ -492,7 +492,7 @@ Shared primitives:
 
 The Foundation embeds SQL expressions inside field/metric/filter
 definitions. The default dialect is `OSI_SQL_2026`
-([`specs/SQL_EXPRESSION_SUBSET.md`](specs/SQL_EXPRESSION_SUBSET.md)). The
+([`../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md)). The
 compiler's expression handling follows three rules:
 
 1. **All expression manipulation goes through SQLGlot ASTs.** Raw-string
@@ -536,7 +536,7 @@ frame bounds raise `E_DEFERRED_FRAME_MODE` per D-032.
 ## 8. Error discipline
 
 The authoritative catalog is **Appendix C of
-[`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md)**.
+[`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md)**.
 [`docs/ERROR_CODES.md`](docs/ERROR_CODES.md) is the implementation-side
 mirror that names the Python `ErrorCode` enum members one-for-one with
 the appendix.
@@ -681,7 +681,7 @@ which they first matter.
 ## 13. Glossary
 
 - **Algebra** — the nine pure operators over `CalculationState` defined
-  in [`specs/JOIN_ALGEBRA.md`](specs/JOIN_ALGEBRA.md).
+  in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
 - **Aggregation query** — a Foundation query shape (§5.1.1): `Dimensions`,
   `Measures`, `Where`, `Having`, `Order By`, `Limit`. Result cardinality
   is `DISTINCT(Dimensions)`.
@@ -702,14 +702,14 @@ which they first matter.
 - **Chasm trap** — two facts sharing a dimension without a direct
   relationship; resolved by per-fact aggregation + `merge` (D-001 row 3).
 - **Foundation** — the subset of OSI this implementation targets;
-  defined in [`specs/Proposed_OSI_Semantics.md`](specs/Proposed_OSI_Semantics.md)
+  defined in [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md)
   (`osi_version: "0.1"`).
 - **Deferred** — a feature in §10 of the Foundation spec that is out of
   scope; raises `E_DEFERRED_KEY_REJECTED` at parse time.
 - **Conformance Decision (D-NNN)** — a numbered row in Appendix B of the
   Foundation spec; each is a small contract paired with a test shape.
 - **Test Vector (T-NNN)** — a runnable witness for a `D-NNN`, defined in
-  [`specs/DATA_TESTS.md`](specs/DATA_TESTS.md) and shipped under
+  [`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) and shipped under
   [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/).
 - **Golden test** — a snapshot test whose expected output is a file on
   disk, refreshed only by explicit command.

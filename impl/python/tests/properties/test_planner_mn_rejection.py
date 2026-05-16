@@ -7,8 +7,8 @@ raise ``E3012_MN_NO_STITCH_PATH`` before any SQL is produced.
 
 ``E3011_MN_AGGREGATION_REJECTED`` is reserved as the engine-capability
 opt-out (per ``Proposed_OSI_Semantics.md §6.8 Semantic guarantee``) —
-emitted by engines that do not support M:N at all. ``osi_python``
-supports M:N, so the user-facing per-query failure surface is
+emitted by engines that do not support M:N at all. This reference
+implementation supports M:N, so the user-facing per-query failure surface is
 ``E3012`` / ``E3013``, not ``E3011``. The algebra layer raises
 ``E3011`` internally as a precondition signal on N:N edges; the
 planner reclassifies it to the per-query code before returning.

@@ -181,15 +181,21 @@ S-26 retro; the recommended split is described there.
 ### 3.5 The composer's shape
 
 `Planner.plan(query)` never invents algebra operators; it only composes
-them. See the pseudocode in `specs/JOIN_ALGEBRA.md §7`. Practical rules:
+them. See the pseudocode in
+[`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §7`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+Practical rules:
 
 - Each helper returns a `CalculationState` (not SQL, not a plan, not a
   tuple of metadata).
-- Helpers receive `ctx: PlannerContext` and never import the model
-  directly.
+- Helpers receive `ctx: PlannerContext` and read the parsed model
+  through it. Direct imports from `osi.parsing.models` are allowed for
+  *type annotations only* (the linter contract in §6 enforces the
+  one-way flow at runtime); helpers must not call top-level parsing
+  functions or instantiate parsed types on their own.
 - Helpers that could fail their preconditions catch the `AlgebraError`
-  raised by the operator and re-raise as an `E3xxx` with additional
-  context (dataset, field, query position).
+  raised by the operator and re-raise as an `OSIError` with an
+  `error.code` from Appendix C and additional context (dataset, field,
+  query position).
 
 ---
 
@@ -320,8 +326,10 @@ the codebase; a PR that violates one should not merge.
    from `codegen`. Parsing imports only from `common`. Enforced by
    `import-linter`.
 7. **`PlannerContext` is the only model handle in planning.** Sub-modules
-   receive `ctx: PlannerContext` and never import the semantic model
-   directly.
+   receive `ctx: PlannerContext`. Direct imports from
+   `osi.parsing.models` are allowed for type annotations only; no
+   helper instantiates parsed types or calls parsing entry points on
+   its own.
 8. **Facades stay consistent.** `planning/__init__.py` re-exports the
    public surface. Any addition / rename in a sub-module updates the
    facade in the same PR.
@@ -399,8 +407,8 @@ abstraction, not to make the layers leaky.
 | Goal | Entry point |
 |:---|:---|
 | Parse a model | `osi.parsing.parse_semantic_model(path)` |
-| Build a query plan | `osi.planning.Planner(model).plan(query)` |
-| Render SQL | `osi.codegen.render(plan, dialect="duckdb")` |
+| Build a query plan | `osi.planning.plan(ctx, query)` where `ctx = PlannerContext(model, namespace, graph)` |
+| Render SQL | `osi.codegen.compile_plan(plan, dialect=Dialect.DUCKDB)` |
 | End-to-end CLI | `osi_cli.py` (`load`, `describe`, `sql`, `explain`, `run`) |
 | Diagnostics CLI | `python -m osi describe \| explain \| resolve \| compile \| explain-code` |
 | Look up an error code | `osi.diagnostics.error_catalog.explain_error(code)` or `osi explain-code <CODE>` |

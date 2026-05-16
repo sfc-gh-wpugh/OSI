@@ -405,7 +405,8 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ),
     ErrorCode.E3011_MN_AGGREGATION_REJECTED: (
         "Engine-capability opt-out — an engine that does not support M:N "
-        "traversal raises this for every M:N query. ``osi_python`` is "
+        "traversal raises this for every M:N query. This reference "
+        "implementation is "
         "M:N-supporting; the algebra layer raises this as an internal "
         "precondition signal on ``N : N`` edges, which the planner "
         "translates to the user-facing per-query codes ``E3012`` / "

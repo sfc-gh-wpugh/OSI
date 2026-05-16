@@ -24,7 +24,7 @@ The Foundation contract per `Proposed_OSI_Semantics.md` §11 / D-009 is
 "engines MAY accept these keys behind a clearly-named, off-by-default
 extension flag — a model that uses such a flag is non-portable until
 the corresponding deferred proposal lands". This module is that
-extension surface for ``osi_python``.
+extension surface for this reference implementation.
 
 Every flag in :class:`FoundationFlags` defaults to ``False``. Calling
 ``parse_semantic_model(source)`` with no ``flags`` argument therefore

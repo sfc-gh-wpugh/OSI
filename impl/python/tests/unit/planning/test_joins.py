@@ -121,8 +121,8 @@ class TestFindEnrichmentPath:
         engine is ``E3012_MN_NO_STITCH_PATH`` (or ``E3013`` for the
         two-fact stitch case). ``E3011`` is reserved for the
         engine-capability opt-out (vendor declaring no M:N support at
-        all) and never appears at the user-facing surface for
-        ``osi_python``. The classifier upgrades the algebra-internal
+        all) and never appears at the user-facing surface for the
+        reference implementation. The classifier upgrades the algebra-internal
         ``E3011`` precondition signal to ``E3012`` whenever the unsafe
         edge is N:N, surfacing the actionable resolution routes in the
         error message.

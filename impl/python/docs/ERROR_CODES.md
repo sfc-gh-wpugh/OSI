@@ -1,7 +1,7 @@
 # Error Codes
 
 > **Authoritative catalog: Appendix C of
-> [`specs/Proposed_OSI_Semantics.md`](../specs/Proposed_OSI_Semantics.md).**
+> [`../../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md).**
 > This document is the implementation-side mirror — it documents the
 > Python `ErrorCode` enum members in `src/osi/errors.py` and how they
 > map to Appendix-C codes. When the two disagree, Appendix C wins and
@@ -33,7 +33,7 @@ evolves; the codes do not.
 | Range | Layer | Kind |
 |:---|:---|:---|
 | `E10xx`–`E11xx` | Parsing | YAML syntax, missing fields, type mismatches, use of deferred features. |
-| `E12xx` | Parsing (SQL surface) | `SEMANTIC_VIEW(...)` clause and bare-view SQL grammar / resolution errors. See `specs/SQL_INTERFACE.md §8`. |
+| `E12xx` | Parsing (SQL surface) | `SEMANTIC_VIEW(...)` clause and bare-view SQL grammar / resolution errors. See `../../../proposals/foundation-v0.1/SQL_INTERFACE.md §8`. |
 | `E2xxx` | Validation | Cross-reference and semantic-rule violations in the model. |
 | `E3xxx` | Planning | Grain conflicts, unreachable fields, path ambiguity, chasm traps. |
 | `E4xxx` | Algebra | Safety violations (explosion-unsafe aggregations, M:N enrich). |
@@ -61,7 +61,7 @@ annotation here matches the enum in `src/osi/errors.py`.
 | `E1002` | active | `MISSING_REQUIRED_FIELD` | Required field absent in YAML. |
 | `E1003` | active | `INVALID_ENUM_VALUE` | Enum value not recognized. |
 | `E1004` | active | `TYPE_MISMATCH` | Field type does not match schema. |
-| `E1005` | active | `IDENTIFIER_INVALID` | Identifier does not conform to the grammar in `specs/OSI_core_file_format.md`. |
+| `E1005` | active | `IDENTIFIER_INVALID` | Identifier does not conform to the grammar in `../../../proposals/foundation-v0.1/OSI_core_file_format.md`. |
 | `E1006` | active | `SQL_EXPRESSION_SYNTAX` | Inline SQL expression inside a YAML field fails to parse as a SQLGlot AST. |
 | `E_DEFERRED_KEY_REJECTED` | active | `DEFERRED_KEY_REJECTED` | Feature exists in the full OSI spec but is deferred from Foundation v0.1. Fired for `EXISTS_IN`, `referential_integrity`, named filters, per-metric `joins.{type, using_relationships}`, FIXED/INCLUDE/EXCLUDE, filter context, windows, pivot, grouping sets, non-equijoins, `ATTR`/`UNSAFE`/`AGG`/`GRAIN_AGG`. See `specs/deferred/README.md` and `Proposed_OSI_Semantics.md §10`. Replaces the legacy `E1105` (S-1). |
 | `E_MIXED_QUERY_SHAPE` | active | `MIXED_QUERY_SHAPE` | Query mixes the aggregation shape (`Dimensions` / `Measures`) with the scalar shape (`Fields`). Foundation v0.1 routes per query into exactly one shape — see `Proposed_OSI_Semantics.md` D-010. (S-2) |
@@ -84,7 +84,7 @@ annotation here matches the enum in `src/osi/errors.py`.
 | `E_NO_PATH` | active | `NO_PATH` | No relationship-graph path connects the two datasets the query needs to join. Replaces `E2004` and `E3013` for the user surface. See D-018. (S-10) |
 | `E_RESERVED_IDENTIFIER` | active | `RESERVED_IDENTIFIER` | User declared an identifier that collides with a reserved Foundation keyword (`GRAIN`, `FILTER`, `QUERY_FILTER`, …). See D-019. (S-10) |
 | `E_RESERVED_NAME` | active | `RESERVED_NAME` | User declared a field, dataset, or metric whose name matches a reserved SQL keyword (`SELECT`, `FROM`, `WHERE`, …). The Foundation forbids these because the generated SQL would be ambiguous in some dialects. See D-019. (S-10) |
-| `E_WINDOW_IN_WHERE` | active | `WINDOW_IN_WHERE` | A `WHERE` predicate contains a window function. Windows are only allowed in `Measures` / `Fields` / `Order By` / `Having`. See D-030. (S-12) |
+| `E_WINDOW_IN_WHERE` | active | `WINDOW_IN_WHERE` | A `WHERE` predicate contains a window function. Windows are only allowed in `Measures` / `Fields` / `Order By` / `Having`. See D-028(b). |
 | `E_NESTED_WINDOW` | active | `NESTED_WINDOW` | A window function's argument or frame contains another window function (`SUM(SUM(x) OVER ...) OVER ...`). The Foundation rejects nested windows because the outer grain is structurally ambiguous. See D-031. (S-12) |
 | `E_WINDOWED_METRIC_COMPOSITION` | active | `WINDOWED_METRIC_COMPOSITION` | A composite metric references a windowed metric. Composing arithmetic on top of a window changes the grain non-uniformly. Wrap the window in an aggregating CTE first if you need to compose. See D-031. (S-12) |
 | `E_DEFERRED_FRAME_MODE` | active | `DEFERRED_FRAME_MODE` | A window uses a frame mode (`GROUPS`) or bound (parameterised expressions like `:n PRECEDING`) that is not in Foundation v0.1. Only literal `ROWS` and `RANGE` frames with constant bounds are accepted. See D-032. (S-12) |
@@ -94,7 +94,7 @@ annotation here matches the enum in `src/osi/errors.py`.
 ## `E12xx` — SQL-surface errors
 
 Raised by the SQL-interface parser defined in
-[`specs/SQL_INTERFACE.md`](../specs/SQL_INTERFACE.md). Every code here
+[`../../../proposals/foundation-v0.1/SQL_INTERFACE.md`](../../../proposals/foundation-v0.1/SQL_INTERFACE.md). Every code here
 fires *before* planning — a malformed SQL query never reaches the
 algebra.
 

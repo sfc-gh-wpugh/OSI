@@ -5,7 +5,7 @@ is a valid Foundation model — no deferred features.
 
 When adding a model:
 
-- Use the file format in [`../../specs/OSI_core_file_format.md`](../../specs/OSI_core_file_format.md).
+- Use the file format in [`../../../../proposals/foundation-v0.1/OSI_core_file_format.md`](../../../../proposals/foundation-v0.1/OSI_core_file_format.md).
 - Declare `primary_key` on every dataset used on the one-side of a
   relationship.
 - Declare `referential_integrity` where the relationship is known to be

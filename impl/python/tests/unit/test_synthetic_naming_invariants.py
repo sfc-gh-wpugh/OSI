@@ -50,23 +50,31 @@ _FORBIDDEN_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
 )
 
 
-def _osi_python_root() -> Path:
+def _project_root() -> Path:
+    """Locate the implementation root by walking up to the nearest
+    ``pyproject.toml`` whose ``src/osi/`` package exists.
+
+    This walks up from the test file rather than hard-coding the project
+    directory name so it works regardless of whether the implementation
+    lives under ``osi_python/`` (the legacy layout) or
+    ``impl/python/`` (the OSI repo layout).
+    """
     here = Path(__file__).resolve()
     for parent in here.parents:
-        if (parent / "pyproject.toml").exists() and parent.name == "osi_python":
+        if (parent / "pyproject.toml").exists() and (parent / "src" / "osi").is_dir():
             return parent
-    raise RuntimeError("could not locate osi_python project root")
+    raise RuntimeError("could not locate osi reference-impl project root")
 
 
 def _python_files() -> list[Path]:
-    root = _osi_python_root()
+    root = _project_root()
     src = root / "src"
     return sorted(src.rglob("*.py"))
 
 
 @pytest.mark.parametrize("path", _python_files(), ids=lambda p: str(p.name))
 def test_no_step_prefix_literal_outside_owner_modules(path: Path) -> None:
-    rel = path.resolve().relative_to(_osi_python_root().resolve()).as_posix()
+    rel = path.resolve().relative_to(_project_root().resolve()).as_posix()
     if rel in _OWNERS:
         return
     text = path.read_text(encoding="utf-8")

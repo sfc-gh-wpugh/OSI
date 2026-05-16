@@ -227,7 +227,7 @@ class TestMNRejection:
         """Declared N:N with no resolution route → ``E3012``.
 
         Per ``Proposed_OSI_Semantics.md §6.8`` an M:N-supporting
-        engine (which ``osi_python`` is) surfaces per-query M:N
+        engine (which this implementation is) surfaces per-query M:N
         failures as ``E3012_MN_NO_STITCH_PATH`` (or ``E3013`` for
         the two-fact stitch case), which carry the actionable
         resolution routes (bridge, stitch, EXISTS_IN) in the error

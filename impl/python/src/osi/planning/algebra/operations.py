@@ -11,7 +11,7 @@ through :mod:`osi.planning.algebra`.
 
 Every compiler transformation is expressed as a composition of these
 nine operators. Adding a tenth is a SPEC change (see
-``specs/JOIN_ALGEBRA.md §3``).
+``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §3``).
 
 Mutation-score target: **≥ 90%** for this module (``INFRA.md §1.1``). A
 surviving mutation here is a P0 bug — it means at least one property or

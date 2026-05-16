@@ -1,10 +1,11 @@
 """Immutable value types that flow through the closed algebra.
 
-See ``specs/JOIN_ALGEBRA.md §1`` for the normative contract. Nothing in
-this file imports from ``osi.parsing`` or ``osi.codegen``; those layers
-see algebra values but never construct them directly. Construction
-happens only through :func:`osi.planning.algebra.operations.source` (and
-its downstream operator chain).
+See ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §1`` for
+the normative contract. Nothing in this file imports from
+``osi.parsing`` or ``osi.codegen``; those layers see algebra values but
+never construct them directly. Construction happens only through
+:func:`osi.planning.algebra.operations.source` (and its downstream
+operator chain).
 
 Invariants (see ``ARCHITECTURE.md §6``):
 

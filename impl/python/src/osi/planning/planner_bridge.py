@@ -1,7 +1,7 @@
 """Mid-pipeline bridge resolution for the planner.
 
-This module discharges the bridge route in
-``Proposed_OSI_Semantics.md §6.5.1`` *without* requiring the bridge
+This module discharges the bridge route in the Foundation spec
+(`Proposed_OSI_Semantics.md` §6.5.1) *without* requiring the bridge
 to be the source dataset. The standard planner sources a fact and
 walks an `N : 1` enrichment chain to every dimension dataset; when
 that chain hits an unsafe edge but a bridge dataset can resolve the
@@ -12,7 +12,8 @@ M:N traversal, this module builds an alternative plan shape:
 2. ``aggregate`` to the bridge's left join-key grain, materialising
    each metric at that grain (distributive aggregates only).
 3. ``source(bridge)``, ``enrich`` the right-side target, and
-   ``enrich`` the pre-aggregated state in via :class:`EnrichDerivedPayload`.
+   ``enrich`` the pre-aggregated state in via
+   :class:`EnrichDerivedPayload`.
 4. ``aggregate`` again at the query's dimension grain, re-aggregating
    each materialised metric with the same operator (``SUM``-of-``SUM``,
    ``MAX``-of-``MAX`` …).
@@ -22,15 +23,16 @@ The new plan shape is a pure composition of existing operators —
 to add. The only new wiring is :class:`EnrichDerivedPayload`, which
 lets ``enrich`` accept a derived child rather than a base table.
 
-Restrictions (Foundation v1; revisit if real models need more):
+Restrictions in this version of the reference implementation
+(re-examine when real models need more):
 
 * Every metric in the group must be **distributive** (``SUM``,
   ``COUNT``, ``MIN``, ``MAX``). Algebraic (``AVG``) and holistic
   (``COUNT_DISTINCT``) aggregates can't be re-aggregated losslessly
   from a pre-aggregated intermediate, so the planner falls back to
   the original error.
-* No composite metrics (``§5.4``). Composites must currently use the
-  standard planner shape.
+* No composite metrics (`Proposed_OSI_Semantics.md §5.4`). Composites
+  must currently use the standard planner shape.
 * All query dimensions must reside on the bridge's right-hand side
   (i.e. reachable from the bridge by safe `N : 1` steps). Fact-side
   dimensions would force a wider pre-aggregation grain than this
