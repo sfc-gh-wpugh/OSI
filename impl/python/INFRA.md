@@ -8,7 +8,7 @@ Maintained in lockstep with the code.
 (the OSI Foundation). `INFRA.md` defines *how we ensure the product is
 built well* (tests, lint, CI, quality gates, tool choices).
 
-**Relationship to `../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`.** The algebra is the hard
+**Relationship to `docs/JOIN_ALGEBRA.md`.** The algebra is the hard
 boundary for correctness. This document enforces the quality gates that
 keep that boundary intact.
 
@@ -98,7 +98,7 @@ Load-bearing invariants; override every other consideration in
 - **No f-string SQL, ever.** All SQL manipulation goes through SQLGlot
   AST. Banned tokens are caught by a custom flake8 check and a CI grep.
 - **Grain is explicit on every `CalculationState`.** Algebra ops
-  enforce grain-safety before returning. See `../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4.4`.
+  enforce grain-safety before returning. See `docs/JOIN_ALGEBRA.md §4.4`.
 - **Identifier normalization** goes through `osi.common.identifiers.normalize_identifier`.
   Raw `==` on identifier strings is a bug and is flagged by lint.
 - **Unsupported semantics raise `OSIError`.** Never silently emit wrong
@@ -110,7 +110,7 @@ Load-bearing invariants; override every other consideration in
 |:---|:---|
 | All §1.1 / §1.2 / §1.3 gates | Green. |
 | `CHANGELOG.md` | Updated for user-visible changes. |
-| `../../proposals/foundation-v0.1/JOIN_ALGEBRA.md` diff | Reviewed by two maintainers if laws or operators change. |
+| `docs/JOIN_ALGEBRA.md` diff | Reviewed by two maintainers if laws or operators change. |
 | Mutation score | No per-module regression > 2 pp since previous release. |
 
 ---
@@ -152,7 +152,7 @@ secondary, but `mutmut` is the default and the CI gate.
 The algebra is small enough to fully specify and large enough to be
 impossible to exhaustively test by example. Property tests with
 generation strategies are the only tractable way to check the laws in
-`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`.
+`docs/JOIN_ALGEBRA.md §4`.
 
 ---
 
@@ -168,15 +168,15 @@ non-SPEC sprints.
 | I-2 | `import-linter` contracts enforcing one-way flow and no deferred-feature imports. | planned | Architecture invariants are machine-checked; new contributors cannot accidentally violate them. | — |
 | I-3 | Hypothesis strategies for `identifiers()`, `schemas()`, `states()`, `operator_chains()`. | planned | Foundation for every property test; without this, §1.1 mutation targets are unachievable. | — |
 | I-4 | `mutmut` integrated into CI with per-module thresholds. Algebra-module fast-path runs on every PR; full run nightly. | planned | Enforces §1.1.1; a surviving mutation in the algebra becomes a P0 automatically. | — |
-| I-5 | Reference pandas interpreter for equivalence-law testing (`tests/properties/reference.py`). | planned | Equivalence laws (§4.9, §4.10 of `../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`) can compare SQL output to semantic ground truth. | — |
+| I-5 | Reference pandas interpreter for equivalence-law testing (`tests/properties/reference.py`). | planned | Equivalence laws (§4.9, §4.10 of `docs/JOIN_ALGEBRA.md`) can compare SQL output to semantic ground truth. | — |
 | I-6 | Golden test driver + `make golden-refresh` command. | planned | Plan and SQL diffs in PR review are immediate and human-readable. | — |
 | I-7 | DuckDB E2E fixture harness (`tests/e2e/conftest.py` + fixtures). | planned | Row-level correctness on real data, not just shape-of-SQL. | — |
 | I-8 | TPC-DS subset harness (queries expressible in the Foundation). | planned | Exercises the combined surface on real analytical idioms. | — |
 | I-9 | Cursor skills: `add-new-operator-to-algebra`, `add-new-dialect`, `debug-plan-output`. | planned | Contributor velocity; recipes replace tribal knowledge. | — |
 | I-10 | Performance benchmark baselines with `pytest-benchmark` and a per-release report. | planned | Prevents silent regressions; performance work gets visibility. | — |
 | I-11 | `import-linter` rule: no module in `src/osi/` may import from `specs/deferred/` or mention a deferred-feature symbol. | planned | Keeps the Foundation thin; no speculative plumbing leaks. | — |
-| I-12 | `SEMANTIC_VIEW(...)` SQL parser (`../../proposals/foundation-v0.1/SQL_INTERFACE.md`). Wires up `E1201`–`E1213` (all currently `RESERVED`). | planned | Portable, JDBC/ODBC-visible surface so BI tools, editors, and notebooks can author Foundation queries without a new client library. Unlocks interop with Snowflake semantic views. | — |
-| I-13 | M:N resolution per `Proposed_OSI_Semantics.md §6.5`: bridge anchor discovery for dim-only queries, multi-fact stitch validation, `E3012_MN_NO_SAFE_REWRITE` / `E3013_NO_STITCHING_DIMENSION` error reclassification. | completed | Foundation can now plan every M:N shape the spec mandates (single bridge, stitch on shared dim, `EXISTS_IN` filter) and surfaces the spec's actionable errors when no route applies. Per-query M:N failures emit `E3012` / `E3013` (the user-facing per-query codes); `E3011_MN_AGGREGATION_REJECTED` is reserved for engine-level M:N opt-outs (vendor capability, not per-query verdict — see §6.8 *Semantic guarantee*) and is never raised at the user-facing surface by `osi_python`. Eliminates 5 of 14 `xfail` compliance cases. | — |
+| I-12 | `SEMANTIC_VIEW(...)` SQL parser (gated on the future SQL_INTERFACE proposal). Wires up `E1201`–`E1213` (all currently `RESERVED`). | planned | Portable, JDBC/ODBC-visible surface so BI tools, editors, and notebooks can author Foundation queries without a new client library. Unlocks interop with Snowflake semantic views. | — |
+| I-13 | M:N resolution per `Proposed_OSI_Semantics.md §6.5`: bridge anchor discovery for dim-only queries, multi-fact stitch validation, `E3012_MN_NO_STITCH_PATH` / `E3013_NO_STITCHING_DIMENSION` error reclassification. | completed | Foundation can now plan every M:N shape the spec mandates (single bridge, stitch on shared dim, `EXISTS_IN` filter) and surfaces the spec's actionable errors when no route applies. Per-query M:N failures emit `E3012` / `E3013` (the user-facing per-query codes); `E3011_MN_AGGREGATION_REJECTED` is reserved for engine-level M:N opt-outs (vendor capability, not per-query verdict — see §6.8 *Semantic guarantee*) and is never raised at the user-facing surface by `osi_python`. Eliminates 5 of 14 `xfail` compliance cases. | — |
 | I-14 | Per-metric `joins.using_relationships` path disambiguation (`§6.7`). | completed | Authors can disambiguate `E3001_AMBIGUOUS_JOIN_PATH` per metric without restructuring the model — same convention Snowflake Semantic Views uses. | — |
 | I-15 | `EXISTS_IN` codegen emits correlated `EXISTS (SELECT 1 ...)` per `§7.4 + §11 #8` (was `IN (SELECT keys)`). | completed | Spec-correct NULL semantics and dialect-portable; previous shape was wrong on both counts and broke on DuckDB tuple-IN. | — |
 | I-16 | Algebra honours `unique_keys`. `source` plumbs `dataset.unique_keys` into `CalculationState`; `enrich`'s fan-trap rule accepts join keys that match the PK *or any UK* via `CalculationState.is_unique_on()`. UKs are propagated through every grain-preserving operator and dropped/intersected appropriately by `aggregate`/`merge`. Removed the asymmetry between graph-layer cardinality inference (already UK-aware) and algebra-layer grain reasoning (was PK-only). Also extracted `add_columns` and `broadcast` into `algebra/composition.py` to keep the per-file LOC budget. | completed | A 1:N relationship that was *mismarked* (PK chosen on a different column set) can now be recovered by adding `unique_keys` — exactly as the spec promises in `§4.2`. Acceptance: `tests/e2e/test_cardinality_safety.py::test_recovered_model_matches_canonical_results` flipped from `xfail(strict)` to `passed`. New invariant **I-9** added to `algebra/state.py`. | fa47a74a |
@@ -222,7 +222,7 @@ non-SPEC sprints.
 | I-56 | Refactor `src/osi/planning/steps.py` (currently 626 LOC). Recommended split: keep `steps.py` as the public step-factory facade and move per-step builders (source, enrich, filter, aggregate, project, add_columns) into a `steps/` subpackage. Pure refactor — no behaviour change; existing planner / compliance tests must pass unchanged. | planned | Same rationale as I-54 / I-55: protect the 600-LOC cap and keep the step-construction surface scannable as new operators land. Surfaced during the Phase 5 reference-implementation polish review. | — |
 | I-57 | Lift the repository-wide coverage floor from 84% back to ≥ 90%. Branches under-covered by unit tests today (compliance-suite-only): `planner_scalar.py` (15%), `planner_bridge.py` (37%), `planner_nested.py` (44%), `home_grain.py` (76%), `joins.py` / `planner_mn.py` / `planner.py` (≈ 80%). Each module needs its own happy-path + error-path unit tests so a planner regression fails at the unit level instead of through the slower compliance run. | planned | Today a planner-internal regression only surfaces through the multi-minute compliance suite. Lifting the floor — and ratcheting the floor up as tests land — guarantees regressions fail fast and gives mutation testing real material to chew on in the planner branches. | — |
 | I-56 | **Carried from S-26**: Drop the `(future)` hedge from the `osi.diagnostics.error_catalog` module docstring now that `osi explain-code` ships in v0.1. Trivial, batched into the next docs-touching sprint. | planned | Keeps the catalogue's self-description honest; future readers shouldn't think the CLI surface is still aspirational. | — |
-| I-57 | **Spec amendment 2026-05-13**: D-029 `ORDER BY` NULL-placement default flipped from "always `NULLS LAST` regardless of direction" to the **SQL:2003 high-end-NULL convention** — `ASC ⇒ NULLS LAST`, `DESC ⇒ NULLS FIRST`. Restores the symmetry property that flipping `ASC ↔ DESC` flips NULL placement (so a "top-N → bottom-N" UI flip moves the NULL rows as expected). Also collapses Snowflake from a divergence target to "matches the OSI default out-of-the-box", leaving Spark/Databricks as the lone outlier. Touched: `Proposed_OSI_Semantics.md` (§5.1, §6.10.2, §11, Appendix B D-029), `SPEC.md` §1.3 + S-13 sprint row, `../../proposals/foundation-v0.1/SNOWFLAKE_DIVERGENCES.md` SD-2 (rewritten), `src/osi/codegen/transpiler.py` (`nulls_first=o.descending`), gold SQL for `t-027` / `t-032` / `t-036` flipped to `DESC NULLS FIRST`, golden snapshot for `test_sql__order_by_and_limit` regenerated, **new compliance test `t-062-nulls-first-default-on-desc`** locks in the symmetric DESC half (paired with t-026). 100% compliance preserved (67/67). Codegen note: sqlglot's per-dialect elision means the explicit `NULLS …` token is omitted on dialects whose native default already matches the resolved OSI default (e.g. Snowflake `DESC` alone is `NULLS FIRST` natively); D-029's wording was relaxed to allow this since elision and explicit emission produce identical row orders on that dialect. | completed | Fixes a real spec defect found during the v0.1 quality loop: the original "always `NULLS LAST`" rule guaranteed determinism but broke the symmetry property every BI mental model depends on (flip a sort, NULLs should move). The new convention preserves both. Also reduces porting friction against the most-deployed warehouse (Snowflake matches out-of-the-box). | — |
+| I-57 | **Spec amendment 2026-05-13**: D-029 `ORDER BY` NULL-placement default flipped from "always `NULLS LAST` regardless of direction" to the **SQL:2003 high-end-NULL convention** — `ASC ⇒ NULLS LAST`, `DESC ⇒ NULLS FIRST`. Restores the symmetry property that flipping `ASC ↔ DESC` flips NULL placement (so a "top-N → bottom-N" UI flip moves the NULL rows as expected). Also collapses Snowflake from a divergence target to "matches the OSI default out-of-the-box", leaving Spark/Databricks as the lone outlier. Touched: `Proposed_OSI_Semantics.md` (§5.1, §6.10.2, §11, Appendix B D-029), `SPEC.md` §1.3 + S-13 sprint row, `Proposed_OSI_Semantics.md` §12.A Snowflake intentional-divergence summary (rewritten), `src/osi/codegen/transpiler.py` (`nulls_first=o.descending`), gold SQL for `t-027` / `t-032` / `t-036` flipped to `DESC NULLS FIRST`, golden snapshot for `test_sql__order_by_and_limit` regenerated, **new compliance test `t-062-nulls-first-default-on-desc`** locks in the symmetric DESC half (paired with t-026). 100% compliance preserved (67/67). Codegen note: sqlglot's per-dialect elision means the explicit `NULLS …` token is omitted on dialects whose native default already matches the resolved OSI default (e.g. Snowflake `DESC` alone is `NULLS FIRST` natively); D-029's wording was relaxed to allow this since elision and explicit emission produce identical row orders on that dialect. | completed | Fixes a real spec defect found during the v0.1 quality loop: the original "always `NULLS LAST`" rule guaranteed determinism but broke the symmetry property every BI mental model depends on (flip a sort, NULLs should move). The new convention preserves both. Also reduces porting friction against the most-deployed warehouse (Snowflake matches out-of-the-box). | — |
 
 **Status values.** `planned` · `in-progress` · `completed` · `deferred`
 
@@ -284,13 +284,13 @@ is stable" — rejected because the algebra is supposed to be stable
 
 ### [I-DEC-3] Property-based testing as primary correctness tool — 2026-04-25
 
-**Context.** The algebra has twelve universal laws (`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`).
+**Context.** The algebra has twelve universal laws (`docs/JOIN_ALGEBRA.md §4`).
 Each is a statement of the form "for all legal states and all legal op
 arguments, X holds." Example-based unit tests can check hundreds of
 cases; property tests with Hypothesis can check thousands with
 strategically-generated counterexamples.
 
-**Decision.** Every law in `../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4` has a corresponding
+**Decision.** Every law in `docs/JOIN_ALGEBRA.md §4` has a corresponding
 Hypothesis property test under `tests/properties/`. Property tests are
 equal-priority with unit tests (not optional). Failure of a property
 test blocks merge.

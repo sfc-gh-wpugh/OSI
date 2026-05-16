@@ -10,8 +10,8 @@
   (Foundation, `osi_version: "0.1"`),
   [`SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md)
   (`OSI_SQL_2026` default dialect),
-  [`JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md),
-  [`DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md)
+  [`JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md),
+  [`DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md)
   (T-NNN vectors).
 - **Implementation docs:** [`SPEC.md`](SPEC.md), [`ARCHITECTURE.md`](ARCHITECTURE.md),
   [`INFRA.md`](INFRA.md).
@@ -61,7 +61,7 @@ Run `make check`. If `make mutation-fast` shows a surviving mutation in
   [`Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md).
   If you need one, add a `D-NNN` row in Appendix B and an `E_*` row in
   Appendix C in the same PR, then a `T-NNN` test in
-  [`DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md).
+  [`DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md).
 - **Do not** use f-strings or string concatenation to build SQL. Ever.
 - **Do not** silence a property test by tightening the strategy or by
   adding an `assume()` that makes it vacuous.

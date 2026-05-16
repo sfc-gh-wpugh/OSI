@@ -1,5 +1,5 @@
 -- F-PRELUDE — single-fact star with multi-fact extension.
--- Source: ../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.1
+-- Source: ../../DATA_TESTS.md §3.1
 --
 -- Used by: T-001, T-002, T-003, T-004, T-005x, T-006, T-011, T-016,
 --          T-021, T-029, T-033, and most query-shape / predicate-routing

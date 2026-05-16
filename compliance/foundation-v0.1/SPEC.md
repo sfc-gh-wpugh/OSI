@@ -9,7 +9,7 @@ documents:
   specific anchors this suite exercises.
 - [`../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md)
   — the `OSI_SQL_2026` default expression dialect.
-- [`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md)
+- [`DATA_TESTS.md`](DATA_TESTS.md)
   — the normative test catalog (`T-001` … `T-NNN`) this suite encodes
   as runnable cases.
 

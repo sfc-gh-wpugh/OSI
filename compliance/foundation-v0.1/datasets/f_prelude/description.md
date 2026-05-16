@@ -6,7 +6,7 @@ orders`, `customers ← returns`) with one orphan order (customer_id =
 semantic that exercises join defaults, NULL group keys, multi-fact
 stitch, and basic aggregation runs against this fixture.
 
-Authoritative source: `../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.1`.
+Authoritative source: `../../DATA_TESTS.md §3.1`.
 
 The deliberate edge cases:
 

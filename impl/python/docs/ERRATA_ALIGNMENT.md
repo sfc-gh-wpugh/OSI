@@ -37,21 +37,21 @@ as summarized in `Proposed_OSI_Semantics.md §12.2` / `§12.3`.
 
 | # | Summary | Disposition | Spec anchor | Test |
 |:--|:---|:---|:---|:---|
-| 1 | Different aggregation granularities in a single SELECT. | **Resolved** — all measures in one query resolve at the query grain; bare-view cross-grain aggregates raise `E1209`. | `Proposed_OSI_Semantics.md §5.2`, `SQL_INTERFACE.md §6.3` | `tests/e2e/test_single_grain_per_query.py` |
-| 2 | Dimension-only queries produce different cardinalities on different interfaces. | **Resolved** — both the clause form and bare view apply `DISTINCT(Dimensions)`. | `Proposed_OSI_Semantics.md §5.2`, `SQL_INTERFACE.md §5.4` | `tests/properties/test_dimension_only_cardinality.py` |
-| 3 | Implicit `DISTINCT` behavior divergence. | **Resolved** — same rule as #2; explicit projection, explicit aggregation. | `Proposed_OSI_Semantics.md §5`, `SQL_INTERFACE.md §5.4` | `tests/golden/basic/dimension_only/` |
-| 4 | `COUNT(*)` not supported. | **Resolved** — `COUNT(*)` is REQUIRED; ambiguous usage raises `E1212`. | `Proposed_OSI_Semantics.md §7`, `SQL_INTERFACE.md §5.2`, §6.2 | `tests/unit/planning/test_count_star.py` |
-| 5 | `SELECT *` on a bare-view query fails with metadata-internals error. | **Resolved** — `SELECT *` is rejected with a clear `E1208` pointing to `DIMENSIONS dataset.*`. | `SQL_INTERFACE.md §6.1` | `tests/unit/sql/test_reject_select_star.py` |
-| 8 | `FACTS` + `METRICS` cannot coexist. | **Resolved** — kept as `E1207` with an explanatory message. | `SQL_INTERFACE.md §5.3` | `tests/unit/sql/test_facts_metrics_exclusive.py` |
-| 9 | Inner `LIMIT` is a cryptic syntax error. | **Resolved** — `E1211` with an outer-`LIMIT` suggestion. | `SQL_INTERFACE.md §3.2` | `tests/unit/sql/test_clause_only_outer.py` |
-| 10 | Outer `WHERE` must use result aliases, not semantic names. | **Resolved** — formalised as output-column scoping rule. | `SQL_INTERFACE.md §4.3` | `tests/unit/sql/test_outer_scope.py` |
+| 1 | Different aggregation granularities in a single SELECT. | **Resolved** — all measures in one query resolve at the query grain; bare-view cross-grain aggregates raise `E1209`. | `Proposed_OSI_Semantics.md §5.2`, future SQL_INTERFACE proposal §6.3 | `tests/e2e/test_single_grain_per_query.py` |
+| 2 | Dimension-only queries produce different cardinalities on different interfaces. | **Resolved** — both the clause form and bare view apply `DISTINCT(Dimensions)`. | `Proposed_OSI_Semantics.md §5.2`, future SQL_INTERFACE proposal §5.4 | `tests/properties/test_dimension_only_cardinality.py` |
+| 3 | Implicit `DISTINCT` behavior divergence. | **Resolved** — same rule as #2; explicit projection, explicit aggregation. | `Proposed_OSI_Semantics.md §5`, future SQL_INTERFACE proposal §5.4 | `tests/golden/basic/dimension_only/` |
+| 4 | `COUNT(*)` not supported. | **Resolved** — `COUNT(*)` is REQUIRED; ambiguous usage raises `E1212`. | `Proposed_OSI_Semantics.md §7`, future SQL_INTERFACE proposal §5.2, §6.2 | `tests/unit/planning/test_count_star.py` |
+| 5 | `SELECT *` on a bare-view query fails with metadata-internals error. | **Resolved** — `SELECT *` is rejected with a clear `E1208` pointing to `DIMENSIONS dataset.*`. | Future SQL_INTERFACE proposal §6.1 | `tests/unit/sql/test_reject_select_star.py` |
+| 8 | `FACTS` + `METRICS` cannot coexist. | **Resolved** — kept as `E1207` with an explanatory message. | Future SQL_INTERFACE proposal §5.3 | `tests/unit/sql/test_facts_metrics_exclusive.py` |
+| 9 | Inner `LIMIT` is a cryptic syntax error. | **Resolved** — `E1211` with an outer-`LIMIT` suggestion. | Future SQL_INTERFACE proposal §3.2 | `tests/unit/sql/test_clause_only_outer.py` |
+| 10 | Outer `WHERE` must use result aliases, not semantic names. | **Resolved** — formalised as output-column scoping rule. | Future SQL_INTERFACE proposal §4.3 | `tests/unit/sql/test_outer_scope.py` |
 
 ### Naming & ambiguity
 
 | # | Summary | Disposition | Spec anchor | Test |
 |:--|:---|:---|:---|:---|
-| 16 | Same-named expressions across datasets unreachable in standard SQL. | **Resolved** — `dataset.field` qualification MUST be accepted; duplicate unqualified output columns raise `E1205`; ambiguous bare references raise `E1204`. | `Proposed_OSI_Semantics.md §4.7`, `SQL_INTERFACE.md §4.1`, §4.2 | `tests/unit/parsing/test_namespace_collisions.py`, `tests/unit/sql/test_duplicate_output_columns.py` |
-| 17 | Same-named metrics across tables hit the same trap. | **Resolved** — same rule as #16; aliasing required. | `SQL_INTERFACE.md §4.2` | `tests/unit/sql/test_duplicate_metric_names.py` |
+| 16 | Same-named expressions across datasets unreachable in standard SQL. | **Resolved** — `dataset.field` qualification MUST be accepted; duplicate unqualified output columns raise `E1205`; ambiguous bare references raise `E1204`. | `Proposed_OSI_Semantics.md §4.7`, future SQL_INTERFACE proposal §4.1, §4.2 | `tests/unit/parsing/test_namespace_collisions.py`, `tests/unit/sql/test_duplicate_output_columns.py` |
+| 17 | Same-named metrics across tables hit the same trap. | **Resolved** — same rule as #16; aliasing required. | Future SQL_INTERFACE proposal §4.2 | `tests/unit/sql/test_duplicate_metric_names.py` |
 
 ### Window functions
 
@@ -97,7 +97,7 @@ we discover one on our own:
 2. If the disposition is **Resolved**, add at least one test and link it.
 3. If the disposition is **Deferred**, confirm that `E1105 RESERVED_FOR_DEFERRED`
    fires for models/queries that trigger the feature.
-4. If the disposition is **Inherited**, add a note in `../../../proposals/foundation-v0.1/SQL_Caller_Examples.md`
+4. If the disposition is **Inherited**, capture the note locally (the SQL_Caller_Examples surface will land with the future SQL_INTERFACE proposal)
    so callers are aware.
 
 An errata item we cannot map to one of the three dispositions is a

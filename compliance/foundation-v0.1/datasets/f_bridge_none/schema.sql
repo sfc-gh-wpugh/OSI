@@ -1,5 +1,5 @@
 -- F-BRIDGE-NONE — variant of F-BRIDGE without the `appearances` bridge.
--- Source: ../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.3
+-- Source: ../../DATA_TESTS.md §3.3
 --
 -- Used by negative cases that pin E3012_MN_NO_SAFE_REWRITE: the model
 -- declares no relationship between `actors` and `movies`, so any

@@ -1,5 +1,5 @@
 -- F-AMBIG — two relationships between `orders` and `users`.
--- Source: ../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.4
+-- Source: ../../DATA_TESTS.md §3.4
 --
 -- Used by E_AMBIGUOUS_PATH (D-018) tests: orders carries both
 -- placed_by_id and fulfilled_by_id, each FKing to users.id, so any

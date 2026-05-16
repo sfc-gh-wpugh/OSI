@@ -33,7 +33,7 @@ evolves; the codes do not.
 | Range | Layer | Kind |
 |:---|:---|:---|
 | `E10xx`–`E11xx` | Parsing | YAML syntax, missing fields, type mismatches, use of deferred features. |
-| `E12xx` | Parsing (SQL surface) | `SEMANTIC_VIEW(...)` clause and bare-view SQL grammar / resolution errors. See `specs/SQL_INTERFACE.md §8`. |
+| `E12xx` | Parsing (SQL surface) | `SEMANTIC_VIEW(...)` clause and bare-view SQL grammar / resolution errors. RESERVED — lands with the future SQL_INTERFACE proposal §8. |
 | `E2xxx` | Validation | Cross-reference and semantic-rule violations in the model. |
 | `E3xxx` | Planning | Grain conflicts, unreachable fields, path ambiguity, chasm traps. |
 | `E4xxx` | Algebra | Safety violations (explosion-unsafe aggregations, M:N enrich). |
@@ -61,7 +61,7 @@ annotation here matches the enum in `src/osi/errors.py`.
 | `E1002` | active | `MISSING_REQUIRED_FIELD` | Required field absent in YAML. |
 | `E1003` | active | `INVALID_ENUM_VALUE` | Enum value not recognized. |
 | `E1004` | active | `TYPE_MISMATCH` | Field type does not match schema. |
-| `E1005` | active | `IDENTIFIER_INVALID` | Identifier does not conform to the grammar in `specs/OSI_core_file_format.md`. |
+| `E1005` | active | `IDENTIFIER_INVALID` | Identifier does not conform to the grammar in `Proposed_OSI_Semantics.md` §4 ("Identifiers"). |
 | `E1006` | active | `SQL_EXPRESSION_SYNTAX` | Inline SQL expression inside a YAML field fails to parse as a SQLGlot AST. |
 | `E_DEFERRED_KEY_REJECTED` | active | `DEFERRED_KEY_REJECTED` | Feature exists in the full OSI spec but is deferred from Foundation v0.1. Fired for `EXISTS_IN`, `referential_integrity`, named filters, per-metric `joins.{type, using_relationships}`, FIXED/INCLUDE/EXCLUDE, filter context, windows, pivot, grouping sets, non-equijoins, `ATTR`/`UNSAFE`/`AGG`/`GRAIN_AGG`. See `specs/deferred/README.md` and `Proposed_OSI_Semantics.md §10`. Replaces the legacy `E1105` (S-1). |
 | `E_MIXED_QUERY_SHAPE` | active | `MIXED_QUERY_SHAPE` | Query mixes the aggregation shape (`Dimensions` / `Measures`) with the scalar shape (`Fields`). Foundation v0.1 routes per query into exactly one shape — see `Proposed_OSI_Semantics.md` D-010. (S-2) |
@@ -92,14 +92,14 @@ annotation here matches the enum in `src/osi/errors.py`.
 | `E_UNKNOWN_FUNCTION` | active | `UNKNOWN_FUNCTION` | A function call references a name not in the OSI_SQL_2026 catalog. The whitelist and validator live in `osi.parsing.function_whitelist`; vendor-specific functions must go through the per-dialect `dialects:` block. See D-021. |
 | `E_AMBIGUOUS_MEASURE_GRAIN` | RESERVED | `AMBIGUOUS_MEASURE_GRAIN` | Catch-all when a measure has multiple incompatible starting grains and none of the more-specific codes (`E3012`, `E3013`, `E_UNSAFE_REAGGREGATION`) applies. The diagnostic MUST list the starting grains the engine identified. The reference implementation reaches one of the specific codes today, so this code is reserved for engines that synthesise different plan choices. (Appendix C / D-025.) |
 | `E_PRIMARY_KEY_REQUIRED` | RESERVED | `PRIMARY_KEY_REQUIRED` | Engines MAY require `primary_key` declarations on every dataset (so the table grain is well-defined). The reference implementation does not impose this requirement today, but the code is reserved so an opt-in deployment can raise it under a stable name. (Appendix C / §4.2.) |
-| `E_INVALID_NATURAL_GRAIN` | RESERVED | `INVALID_NATURAL_GRAIN` | Raised by a future `natural_grain` implementation (currently deferred). The Foundation parser rejects the `natural_grain` key through `E_DEFERRED_KEY_REJECTED` today. See `proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md`. |
+| `E_INVALID_NATURAL_GRAIN` | RESERVED | `INVALID_NATURAL_GRAIN` | Raised by a future `natural_grain` implementation (currently deferred to a future proposal). The Foundation parser rejects the `natural_grain` key through `E_DEFERRED_KEY_REJECTED` today. See `proposals/foundation-v0.1/Proposed_OSI_Semantics.md` §10. |
 | `E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE` | RESERVED | `NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE` | Sibling of `E_INVALID_NATURAL_GRAIN` for the unsafe pre-aggregation case. Reserved until natural-grain lands. |
 | `E_INTERNAL_INVARIANT` | active | `INTERNAL_INVARIANT` | Implementation extension — the IR or a diagnostic detected a programmer error (e.g. a `QueryPlan` whose steps reference an unplanned input, an unhandled `PlanPayload` subclass in `_payload_to_json`, an unhandled `ResolvedReference` subclass in `_reference_entry`). The shape of the error means "the compiler invariants are out of sync; ship a fix" rather than "your model is wrong". Kept inside the typed `OSIError` hierarchy so the property test "every failure carries a code" still holds for these paths. Not in Appendix C. |
 
 ## `E12xx` — SQL-surface errors
 
 Raised by the SQL-interface parser defined in
-[`specs/SQL_INTERFACE.md`](../specs/SQL_INTERFACE.md). Every code here
+the future SQL_INTERFACE proposal. Every code here
 fires *before* planning — a malformed SQL query never reaches the
 algebra.
 

@@ -4,8 +4,8 @@
 **Status:** Active — sprint roadmap in §11 below
 **Authoritative standard:** [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) (`osi_version: "0.1"`)
 **Expression language:** [`../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md) (`OSI_SQL_2026` is the default dialect)
-**Algebra contract:** [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md)
-**Conformance vectors:** [`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) (`T-NNN` test catalog) — referenced from `Proposed_OSI_Semantics.md` Appendix B.
+**Algebra contract:** [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md)
+**Conformance vectors:** [`../../compliance/foundation-v0.1/DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md) (`T-NNN` test catalog) — referenced from `Proposed_OSI_Semantics.md` Appendix B.
 **Compliance test suite:** [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/) (separate top-level project; see §11.1 of the Foundation spec).
 **Infrastructure & quality contract:** [`INFRA.md`](INFRA.md)
 
@@ -57,7 +57,7 @@ implementation only partially delivered:
    is expressible as a composition of operators from a closed algebra with
    explicit preconditions and grain contracts. Correctness reduces to
    correctness of the algebra; the algebra is checked with property-based
-   tests and guarded with mutation testing. See [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+   tests and guarded with mutation testing. See [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md).
 2. **Failure is explicit.** Any semantics the compiler cannot compile
    correctly raise a typed `OSIError` whose `error.code` is a value from
    Appendix C of [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md).
@@ -241,7 +241,7 @@ The Foundation defines two levels; `osi_python` targets Level 2.
 | L2 (Plan + Render) | Any valid model + Foundation query produces a deterministic plan and compiles to correct SQL on at least one dialect (DuckDB for correctness, Snowflake/BigQuery for portability). Per-engine determinism (D-014) MUST hold; cross-engine SQL determinism is NOT required. |
 
 The canonical compliance vectors live in
-[`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) and the runnable suite in
+[`../../compliance/foundation-v0.1/DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md) and the runnable suite in
 [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/).
 
 ---
@@ -326,14 +326,14 @@ deliberately.
 
 > **Every transformation of a calculation is a total, pure, deterministic
 > function on an immutable `CalculationState`. The nine operators of
-> [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) are the complete set
+> [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md) are the complete set
 > of transformations. A plan is a sequence of those operators. If an
 > operator's precondition cannot be proved at plan-build time, the planner
 > raises a typed `OSIError` and builds no plan.**
 
 ### 5.2 The nine operators
 
-Full signatures and grain contracts in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §3`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md#3-operators):
+Full signatures and grain contracts in [`docs/JOIN_ALGEBRA.md §3`](docs/JOIN_ALGEBRA.md#3-operators):
 
 | Operator | Grain effect | Preconditions |
 |:---|:---|:---|
@@ -351,7 +351,7 @@ Full signatures and grain contracts in [`../../proposals/foundation-v0.1/JOIN_AL
 
 Twelve universal laws (totality, purity, determinism, grain closure,
 idempotences, commutativities, associativities, safety rules). Each law
-is stated in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md#4-laws)
+is stated in [`docs/JOIN_ALGEBRA.md §4`](docs/JOIN_ALGEBRA.md#4-laws)
 and checked by a Hypothesis property test under `tests/properties/`. See
 [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md) for the mapping from law
 to test to mutation-testing target.
@@ -649,7 +649,7 @@ gaps before exiting.
 | **S-10** | Error-taxonomy + identifier-resolution alignment | §4.6 / D-006, D-018, D-019, Appendix C | Parser raises `E_NAME_COLLISION` / `E_NAME_NOT_FOUND` / `E_AMBIGUOUS_PATH` / `E_NO_PATH`; reserve `GRAIN`, `FILTER`, `QUERY_FILTER`. Every internal `OSIError` code maps 1:1 to Appendix C. |
 | **S-11** | Tech-debt #3 — diagnostics + readability | After S-7..S-10 | Refactor planner sub-modules (`classify.py`, `joins.py`) for legibility; ensure `diagnostics.explain` lists the new errors; mutation pass on `classify` / `joins`. |
 | **S-12** | Window functions in Foundation | §6.10 / D-028, D-030, D-031, D-032 | Window-in-`Where` rejection; pre-fan-out window materialization; deferred-frame-mode rejection; windowed-metric-composition rejection. |
-| **S-13** | NULL-placement default + per-engine determinism | §5.1 / D-029, D-014 | Outer `Order By` + window `OVER (... ORDER BY ...)` resolve unspecified NULL placement to `NULLS LAST` for `ASC` and `NULLS FIRST` for `DESC` (the SQL:2003 high-end-NULL convention); emit explicit clause in compiled SQL. **Amended 2026-05-13** from the original "always `NULLS LAST`" rule, which broke the symmetry property under `ASC ↔ DESC` flips; see `SNOWFLAKE_DIVERGENCES.md` SD-2 and INFRA.md I-57. |
+| **S-13** | NULL-placement default + per-engine determinism | §5.1 / D-029, D-014 | Outer `Order By` + window `OVER (... ORDER BY ...)` resolve unspecified NULL placement to `NULLS LAST` for `ASC` and `NULLS FIRST` for `DESC` (the SQL:2003 high-end-NULL convention); emit explicit clause in compiled SQL. **Amended 2026-05-13** from the original "always `NULLS LAST`" rule, which broke the symmetry property under `ASC ↔ DESC` flips; see `Proposed_OSI_Semantics.md` §12.A "Two known intentional divergences" and INFRA.md I-57. |
 | **S-14** | Empty/NULL aggregate behaviour | §6.11 / D-033 | `COUNT*` ⇒ 0, others ⇒ `NULL`; ensure stitch missing-cells follow standard SQL. |
 | **S-15** | Tech-debt #4 — final mutation + property gap fill | INFRA §1.1, §1.1.1 | Run `mutmut` on every planning/codegen module; fill any < 88% gaps with property tests; re-baseline. |
 | **S-16** | `OSI_SQL_2026` default dialect surface | §7 of updated spec, `SQL_EXPRESSION_SUBSET.md` | Treat `OSI_SQL_2026` as the default; per-dialect `expression` form (`{ dialects: [...] }`) in parser; D-021. |
@@ -681,7 +681,7 @@ which they first matter.
 ## 13. Glossary
 
 - **Algebra** — the nine pure operators over `CalculationState` defined
-  in [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+  in [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md).
 - **Aggregation query** — a Foundation query shape (§5.1.1): `Dimensions`,
   `Measures`, `Where`, `Having`, `Order By`, `Limit`. Result cardinality
   is `DISTINCT(Dimensions)`.
@@ -709,7 +709,7 @@ which they first matter.
 - **Conformance Decision (D-NNN)** — a numbered row in Appendix B of the
   Foundation spec; each is a small contract paired with a test shape.
 - **Test Vector (T-NNN)** — a runnable witness for a `D-NNN`, defined in
-  [`../../proposals/foundation-v0.1/DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) and shipped under
+  [`../../compliance/foundation-v0.1/DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md) and shipped under
   [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/).
 - **Golden test** — a snapshot test whose expected output is a file on
   disk, refreshed only by explicit command.

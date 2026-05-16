@@ -182,7 +182,7 @@ S-26 retro; the recommended split is described there.
 
 `Planner.plan(query)` never invents algebra operators; it only composes
 them. See the pseudocode in
-[`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §7`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+[`docs/JOIN_ALGEBRA.md §7`](docs/JOIN_ALGEBRA.md).
 Practical rules:
 
 - Each helper returns a `CalculationState` (not SQL, not a plan, not a
@@ -413,5 +413,5 @@ abstraction, not to make the layers leaky.
 | CLI (without install) | `python -m osi describe \| explain \| resolve \| compile \| explain-code` |
 | Look up an error code | `osi.diagnostics.error_catalog.explain_error(code)` or `osi explain-code <CODE>` |
 | End-to-end Python example | The `README.md` Quick Start block + the runnable scenarios under `examples/` |
-| Algebra deep-dive | [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) |
+| Algebra deep-dive | [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md) |
 | Foundation standard | [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) |

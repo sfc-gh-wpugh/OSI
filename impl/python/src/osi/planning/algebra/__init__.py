@@ -1,7 +1,7 @@
 """The closed algebra — the correctness boundary of the compiler.
 
 All compiler transformations must compose operators from this module.
-See ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`` (the
+See ``../../../../docs/JOIN_ALGEBRA.md`` (the
 authoritative spec) for operator signatures, preconditions, grain
 contracts, and laws.
 

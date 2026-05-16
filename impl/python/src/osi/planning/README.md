@@ -25,7 +25,7 @@ Layer 3: codegen/   + dialect ─────────▶ SQL string
 
 - `algebra/` — the nine operators, the state, grain-safety guards. The
   load-bearing module; see
-  [`../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+  [`../../../../docs/JOIN_ALGEBRA.md`](../../../../docs/JOIN_ALGEBRA.md).
 - `plan.py` — `QueryPlan`, `PlanStep`, `PlanOperation` enum.
 - `planner_context.py` — frozen bundle of model + namespace + graph.
 - `planner.py` — the single `Planner` class.

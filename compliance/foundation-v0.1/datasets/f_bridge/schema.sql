@@ -1,5 +1,5 @@
 -- F-BRIDGE — actor↔movie M:N through the appearances bridge.
--- Source: ../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.2
+-- Source: ../../DATA_TESTS.md §3.2
 --
 -- This is the fixture for the flagship T-015 bridge-deduplication test
 -- (D-026). Two actors at height 170 both appeared in M10 (Action),

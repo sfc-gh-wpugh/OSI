@@ -50,7 +50,7 @@ Raw SQL strings never propagate to the planner.
 ## SQL surface
 
 The Foundation also defines a SQL surface
-([`SQL_INTERFACE.md`](../../../../../proposals/foundation-v0.1/SQL_INTERFACE.md))
+(reserved for the future SQL_INTERFACE proposal)
 that lets callers issue `SELECT … FROM SEMANTIC_VIEW(…)` queries.
 That surface is *not* implemented in this layer; semantic queries are
 built programmatically via the `osi.planning.SemanticQuery`

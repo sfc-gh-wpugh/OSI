@@ -282,15 +282,16 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ),
     ErrorCode.E_INVALID_NATURAL_GRAIN: (
         "RESERVED — Appendix C. Raised by a future ``natural_grain`` "
-        "implementation (currently deferred). The Foundation parser "
-        "rejects the ``natural_grain`` key through "
-        "``E_DEFERRED_KEY_REJECTED`` today. See "
-        "``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``."
+        "implementation (currently deferred to a separate future "
+        "proposal). The Foundation parser rejects the "
+        "``natural_grain`` key through ``E_DEFERRED_KEY_REJECTED`` "
+        "today. See ``proposals/foundation-v0.1/Proposed_OSI_Semantics.md`` §10."
     ),
     ErrorCode.E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE: (
         "RESERVED — sibling of ``E_INVALID_NATURAL_GRAIN`` for the "
         "pre-aggregation-unsafe case. See "
-        "``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``."
+        "``proposals/foundation-v0.1/Proposed_OSI_Semantics.md`` §10 "
+        "(future natural_grain proposal)."
     ),
     ErrorCode.E_INTERNAL_INVARIANT: (
         "Implementation extension — the IR or a diagnostic detected a "
@@ -316,42 +317,44 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     # --- SQL-surface errors (E12xx) -------------------------------------------
     ErrorCode.E1201_SEMANTIC_VIEW_EMPTY: (
         "A ``SEMANTIC_VIEW`` clause was empty. RESERVED — the SEMANTIC_VIEW "
-        "surface is part of the SQL Interface proposal, not Foundation v0.1. "
-        "(Spec: SQL_INTERFACE.md §8.)"
+        "surface lands with the future SQL_INTERFACE proposal §8, not "
+        "Foundation v0.1."
     ),
     ErrorCode.E1202_CLAUSE_ORDER: (
         "Clauses inside ``SEMANTIC_VIEW`` appeared in the wrong order. "
-        "RESERVED — see ``SQL_INTERFACE.md §8`` for the canonical order."
+        "RESERVED — future SQL_INTERFACE proposal §8 defines the canonical "
+        "order."
     ),
     ErrorCode.E1203_REFERENCE_TOO_DEEP: (
         "A ``SEMANTIC_VIEW`` reference exceeded the maximum depth permitted "
-        "by the Foundation. RESERVED — SQL_INTERFACE.md §8."
+        "by the Foundation. RESERVED — future SQL_INTERFACE proposal §8."
     ),
     ErrorCode.E1204_AMBIGUOUS_BARE_REFERENCE: (
         "A bare reference inside ``SEMANTIC_VIEW`` matched more than one "
-        "field. RESERVED — SQL_INTERFACE.md §8."
+        "field. RESERVED — future SQL_INTERFACE proposal §8."
     ),
     ErrorCode.E1205_DUPLICATE_OUTPUT_COLUMN: (
         "Two output columns in a ``SEMANTIC_VIEW`` carry the same name. "
-        "RESERVED — SQL_INTERFACE.md §8."
+        "RESERVED — future SQL_INTERFACE proposal §8."
     ),
     ErrorCode.E1206_METRIC_IN_RAW_AGGREGATE: (
         "A SEMANTIC_VIEW used a raw aggregate (``SUM(x)``) where the spec "
-        "requires a metric reference. (Spec: SQL_INTERFACE.md §8.)"
+        "requires a metric reference. (Spec: future SQL_INTERFACE proposal §8.)"
     ),
     ErrorCode.E1207_FACTS_METRICS_EXCLUSIVE: (
         "A SEMANTIC_VIEW combined ``FACTS`` and ``METRICS`` in a single "
-        "clause. The two are mutually exclusive. (Spec: SQL_INTERFACE.md §8.)"
+        "clause. The two are mutually exclusive. (Spec: future "
+        "SQL_INTERFACE proposal §8.)"
     ),
     ErrorCode.E1208_UNSUPPORTED_SQL_CONSTRUCT: (
         "A SEMANTIC_VIEW used a SQL construct not in the OSI_SQL_2026 "
         "subset (e.g. ``LATERAL``, ``MATCH_RECOGNIZE``). "
-        "(Spec: SQL_EXPRESSION_SUBSET_updated.md.)"
+        "(Spec: SQL_EXPRESSION_SUBSET.md.)"
     ),
     ErrorCode.E1209_CROSS_DATASET_AD_HOC_AGGREGATE: (
         "A raw aggregate inside a SEMANTIC_VIEW spanned multiple datasets — "
         "this requires a metric definition (which carries grain). "
-        "(Spec: SQL_INTERFACE.md §8.)"
+        "(Spec: future SQL_INTERFACE proposal §8.)"
     ),
     ErrorCode.E1210_WINDOW_METRIC_DEFERRED: (
         "Windowed metric definitions are deferred. RESERVED — see "
@@ -359,12 +362,13 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ),
     ErrorCode.E1211_CLAUSE_ONLY_OUTER: (
         "A clause appeared inside an inner SEMANTIC_VIEW that is only "
-        "permitted on the outer query. RESERVED — SQL_INTERFACE.md §8."
+        "permitted on the outer query. RESERVED — future SQL_INTERFACE "
+        "proposal §8."
     ),
     ErrorCode.E1212_COUNT_STAR_AMBIGUOUS: (
         "``COUNT(*)`` appeared in a context where the planner could not "
         "infer which dataset it counts. Qualify it (``COUNT(orders.*)``) or "
-        "use a metric reference. (Spec: SQL_INTERFACE.md §8.)"
+        "use a metric reference. (Spec: future SQL_INTERFACE proposal §8.)"
     ),
     ErrorCode.E1213_PARAMETER_USED_AS_REFERENCE: (
         "A parameter was used in a position the spec reserves for a "

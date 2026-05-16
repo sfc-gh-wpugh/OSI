@@ -141,11 +141,12 @@ class ErrorCode(StrEnum):
     # diagnostic surface is stable when the natural-grain proposal
     # lands; the Foundation parser rejects ``natural_grain`` outright
     # through ``E_DEFERRED_KEY_REJECTED`` today. See
-    # ``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``.
+    # ``proposals/foundation-v0.1/Proposed_OSI_Semantics.md`` §10
+    # (the natural_grain feature is deferred to a future proposal).
     E_INVALID_NATURAL_GRAIN = "E_INVALID_NATURAL_GRAIN"
     # RESERVED — sibling of ``E_INVALID_NATURAL_GRAIN`` for the
-    # pre-aggregation-unsafe case. See
-    # ``proposals/foundation-v0.1/Proposed_OSI_Natural_Grain.md``.
+    # pre-aggregation-unsafe case. Same deferred future proposal as
+    # above — see ``Proposed_OSI_Semantics.md`` §10.
     E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE = "E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE"
     # Implementation extension — raised when the IR or a diagnostic
     # detects a *programmer* error, never a user error. Examples:
@@ -160,23 +161,23 @@ class ErrorCode(StrEnum):
     # carries a code") still hold for these paths.
     E_INTERNAL_INVARIANT = "E_INTERNAL_INVARIANT"
 
-    # E12xx — SQL-surface errors (see
-    # ../../../proposals/foundation-v0.1/SQL_INTERFACE.md §8).
-    # Only E1206 / E1207 / E1208 / E1209 / E1212 have active emit paths
-    # today; the rest are RESERVED for the SEMANTIC_VIEW clause parser.
-    E1201_SEMANTIC_VIEW_EMPTY = "E1201"  # RESERVED — SQL_INTERFACE.md §8
-    E1202_CLAUSE_ORDER = "E1202"  # RESERVED — SQL_INTERFACE.md §8
-    E1203_REFERENCE_TOO_DEEP = "E1203"  # RESERVED — SQL_INTERFACE.md §8
-    E1204_AMBIGUOUS_BARE_REFERENCE = "E1204"  # RESERVED — SQL_INTERFACE.md §8
-    E1205_DUPLICATE_OUTPUT_COLUMN = "E1205"  # RESERVED — SQL_INTERFACE.md §8
+    # E12xx — SQL-surface errors (reserved for the future
+    # SQL_INTERFACE proposal §8). Only E1206 / E1207 / E1208 / E1209 /
+    # E1212 have active emit paths today; the rest are RESERVED for
+    # the SEMANTIC_VIEW clause parser.
+    E1201_SEMANTIC_VIEW_EMPTY = "E1201"  # RESERVED — future SQL_INTERFACE §8
+    E1202_CLAUSE_ORDER = "E1202"  # RESERVED — future SQL_INTERFACE §8
+    E1203_REFERENCE_TOO_DEEP = "E1203"  # RESERVED — future SQL_INTERFACE §8
+    E1204_AMBIGUOUS_BARE_REFERENCE = "E1204"  # RESERVED — future SQL_INTERFACE §8
+    E1205_DUPLICATE_OUTPUT_COLUMN = "E1205"  # RESERVED — future SQL_INTERFACE §8
     E1206_METRIC_IN_RAW_AGGREGATE = "E1206"
     E1207_FACTS_METRICS_EXCLUSIVE = "E1207"
     E1208_UNSUPPORTED_SQL_CONSTRUCT = "E1208"
     E1209_CROSS_DATASET_AD_HOC_AGGREGATE = "E1209"
     E1210_WINDOW_METRIC_DEFERRED = "E1210"  # RESERVED — window metrics deferred
-    E1211_CLAUSE_ONLY_OUTER = "E1211"  # RESERVED — SQL_INTERFACE.md §8
+    E1211_CLAUSE_ONLY_OUTER = "E1211"  # RESERVED — future SQL_INTERFACE §8
     E1212_COUNT_STAR_AMBIGUOUS = "E1212"
-    E1213_PARAMETER_USED_AS_REFERENCE = "E1213"  # RESERVED — SQL_INTERFACE.md §8
+    E1213_PARAMETER_USED_AS_REFERENCE = "E1213"  # RESERVED — future SQL_INTERFACE §8
 
     # E2xxx — Validation errors
     E2001_AMBIGUOUS_NAME = "E2001"

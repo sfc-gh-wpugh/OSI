@@ -5,7 +5,7 @@ Takes a ``SemanticModel`` + ``SemanticQuery`` and produces a frozen
 closed-algebra operator over an immutable ``CalculationState``.
 
 See ``../../../ARCHITECTURE.md`` §3 and
-``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`` for the
+``../../../../docs/JOIN_ALGEBRA.md`` for the
 algebra contract.
 
 **Public API tiers**

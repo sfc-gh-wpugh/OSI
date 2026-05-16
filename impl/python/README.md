@@ -57,7 +57,7 @@ Read in this order:
 | 2 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | The three-layer pipeline, architectural invariants, where-to-add-things decision tree. |
 | 3 | [`INFRA.md`](INFRA.md) | Quality standards, toolchain, infrastructure roadmap, decisions log. |
 | 4 | [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) | The Foundation — authoritative standard. |
-| 5 | [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) | The closed algebra — operators, preconditions, grain contracts, laws. |
+| 5 | [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md) | The closed algebra — operators, preconditions, grain contracts, laws. |
 | 6 | [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md) | How each algebra law is property-tested and mutation-guarded. |
 | 7 | [`docs/TESTING_STRATEGY.md`](docs/TESTING_STRATEGY.md) | The four-layer test pyramid + mutation testing. |
 | 8 | [`RUNNING_TESTS.md`](RUNNING_TESTS.md) | Running the test suite end-to-end, including mutation testing and the readable report. |
@@ -276,11 +276,11 @@ Recently completed Foundation work (see `INFRA.md §3`):
 
 Remaining Foundation gaps:
 
-- `SEMANTIC_VIEW(...)` SQL surface — specification complete in
-  [`specs/SQL_INTERFACE.md`](specs/SQL_INTERFACE.md); parser not yet
-  implemented. Tracked as `INFRA.md §3 I-12`. Error codes
-  `E1201`–`E1213` are carved out in `osi.errors` with `RESERVED`
-  annotations so the eventual parser lands with stable codes.
+- `SEMANTIC_VIEW(...)` SQL surface — deferred to the future
+  SQL_INTERFACE proposal; parser not yet implemented. Tracked as
+  `INFRA.md §3 I-12`. Error codes `E1201`–`E1213` are carved out in
+  `osi.errors` with `RESERVED` annotations so the eventual parser
+  lands with stable codes.
 - Per-metric `joins.type` override (`§6.7`) — schema accepts the
   field, planner doesn't yet thread it through to the join-type
   picker. `using_relationships` is fully wired.

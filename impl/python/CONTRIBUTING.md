@@ -16,7 +16,7 @@ The project has three commitments that every contribution must honor.
    expansion of the standard before writing code.
 2. **The algebra is load-bearing.** Every compiler transformation
    composes operators from
-   [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+   [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md).
    No bypasses.
 3. **Correctness is proved by tests, not wished.** Every feature ships
    with unit + property + golden + E2E tests, and the mutation-testing
@@ -139,7 +139,7 @@ qualify — paste the seed and the shrunk input.
 - Infra / tooling → GitHub issues tagged `infra`.
 - Implementation discussion → PR comments.
 - Breaking Foundation scope (adding a deferred feature) → a proposal PR
-  against `../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md` before the implementation PR.
+  against `specs/Proposed_OSI_Semantics.md` before the implementation PR.
 
 ---
 

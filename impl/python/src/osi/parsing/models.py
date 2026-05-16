@@ -123,9 +123,9 @@ class FieldRole(StrEnum):
     TIME_DIMENSION = "time_dimension"
 
 
-# Backwards-compat aliases for YAML inputs that follow the
-# ``OSI_core_file_format.md`` upper-case spelling. The canonical form
-# is :class:`osi.common.types.Dialect`; this map is consulted by the
+# Backwards-compat aliases for YAML inputs that follow the historical
+# upper-case spelling for dialect names. The canonical form is
+# :class:`osi.common.types.Dialect`; this map is consulted by the
 # ``SemanticModel.dialect`` field validator below.
 _DIALECT_ALIASES: dict[str, Dialect] = {
     "ANSI_SQL": Dialect.ANSI,

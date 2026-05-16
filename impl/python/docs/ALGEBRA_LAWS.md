@@ -1,6 +1,6 @@
 # ALGEBRA_LAWS.md — Machine-Checked Correctness
 
-Companion to [`../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md). That
+Companion to [`JOIN_ALGEBRA.md`](JOIN_ALGEBRA.md). That
 document states the laws informally; this document states them as
 Python-executable property tests, specifies the Hypothesis strategies used
 to generate test data, and lists the mutation-testing budget that guards
@@ -74,7 +74,7 @@ SQL to a reference result.
 
 Each law has:
 
-- **Statement** — the informal law from `../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`
+- **Statement** — the informal law from `JOIN_ALGEBRA.md §4`
 - **Property** — the Python-level assertion
 - **Test file** — location under `tests/properties/`
 - **Mutation target** — module in `src/osi/` where a mutation would break this law
@@ -338,13 +338,13 @@ standard debugging procedure:
 4. Re-run the original property test; it should now pass on the seed.
 
 Never mark a property test as `@skip` to go green. If the property is
-incorrect as stated, fix `../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md` first, then the test.
+incorrect as stated, fix `JOIN_ALGEBRA.md` first, then the test.
 
 ---
 
 ## 6. Adding a New Law
 
-1. State the law in `../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4`.
+1. State the law in `JOIN_ALGEBRA.md §4`.
 2. Reference it from this doc (`docs/ALGEBRA_LAWS.md §2`) with:
    - Property statement
    - Test file path

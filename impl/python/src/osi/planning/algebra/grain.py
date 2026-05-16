@@ -10,7 +10,7 @@ construct real :class:`CalculationState` instances and use the
 algebra operators rather than reaching into the simulator. The
 ``__all__`` at the bottom of this module is the supported surface.
 
-Per ``../../../../../proposals/foundation-v0.1/JOIN_ALGEBRA.md §4.4``
+Per ``../../../../docs/JOIN_ALGEBRA.md §4.4``
 the resulting grain of any operator chain is a pure function of the
 argument sequence. This module exposes that function without needing
 to construct real states — the property test ``test_grain_closure.py``

@@ -1,7 +1,7 @@
 # DATA_TESTS.md — Concrete Test Vectors for the Foundation Compliance Suite
 
 **Status:** Authoritative test catalog
-**Companions:** [`Proposed_OSI_Semantics.md`](Proposed_OSI_Semantics.md) Appendix B · [`JOIN_ALGEBRA.md`](JOIN_ALGEBRA.md) · [`SQL_EXPRESSION_SUBSET.md`](SQL_EXPRESSION_SUBSET.md)
+**Companions:** [`Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) Appendix B · [`JOIN_ALGEBRA.md`](../../impl/python/docs/JOIN_ALGEBRA.md) · [`SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md)
 
 This document is the **concrete realization** of the Foundation Conformance
 Decisions catalogued in `Proposed_OSI_Semantics.md` Appendix B. Each

@@ -37,7 +37,7 @@ Every category exists for a reason. See
 | Layer | Where | What it proves | Speed |
 |:--|:--|:--|:--|
 | **Unit** | `tests/unit/` | Individual functions in isolation — pure inputs to outputs. | <1 s/test |
-| **Property** | `tests/properties/` | Hypothesis-generated states obey the closed-algebra laws ([`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md) + [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md)). | seconds/test |
+| **Property** | `tests/properties/` | Hypothesis-generated states obey the closed-algebra laws ([`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md) + [`docs/ALGEBRA_LAWS.md`](docs/ALGEBRA_LAWS.md)). | seconds/test |
 | **Golden** | `tests/golden/` | Plan and SQL snapshots — the readable diff when *anything* about the compiler output changes. | <1 s/test |
 | **E2E** | `tests/e2e/` | DuckDB executes the generated SQL against fixture data; we assert on the row set. | 1–5 s/test |
 | **Adapter smoke** | `conformance/tests/` | The CLI adapter ([`conformance/adapter.py`](conformance/adapter.py)) speaks the contract in [`../../compliance/ADAPTER_INTERFACE.md`](../../compliance/ADAPTER_INTERFACE.md). | <1 s/test |

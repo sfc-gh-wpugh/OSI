@@ -17,7 +17,7 @@ summarizes the non-negotiable rules and the most common pitfalls.
    the full project-wide rule.
 3. **The algebra is the correctness boundary.** Every compiler
    transformation is a composition of the operators in
-   [`../../proposals/foundation-v0.1/JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md).
+   [`docs/JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md).
    Do not invent a new one. Do not bypass preconditions.
 4. **No silent wrong SQL.** Any semantics the compiler cannot handle
    correctly raise a typed `OSIError` with an error code from
@@ -32,7 +32,7 @@ summarizes the non-negotiable rules and the most common pitfalls.
    See [`docs/TESTING_STRATEGY.md`](docs/TESTING_STRATEGY.md) and
    `SPEC.md §9`. Every D-NNN row in Appendix B has at least one `T-NNN`
    vector in
-   [`DATA_TESTS.md`](../../proposals/foundation-v0.1/DATA_TESTS.md) and a
+   [`DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md) and a
    runnable case in the compliance suite.
 6. **Mutation testing is a hard gate.** A surviving mutation in
    `src/osi/planning/algebra/` is a P0. See [`INFRA.md §1.1`](INFRA.md).
@@ -43,7 +43,7 @@ summarizes the non-negotiable rules and the most common pitfalls.
 - Check [`INFRA.md §3`](INFRA.md) for an in-progress infrastructure item
   that might overlap with your work.
 - If you are adding or changing an algebra operator, read
-  [`JOIN_ALGEBRA.md`](../../proposals/foundation-v0.1/JOIN_ALGEBRA.md)
+  [`JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md)
   in full and check the corresponding property tests in
   `tests/properties/`.
 

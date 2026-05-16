@@ -11,7 +11,7 @@ dataset: f_prelude
 spec_refs:
   - "Proposed_OSI_Semantics.md#sec-10"
   - "Proposed_OSI_Semantics.md#D-009"
-  - "SNOWFLAKE_DIVERGENCES.md"
+  - "Proposed_OSI_Semantics.md#12-A"
 tags: [deferred, negative, snowflake, window, partition-by-excluding]
 conformance_level: foundation_v0_1
 decision: D-009

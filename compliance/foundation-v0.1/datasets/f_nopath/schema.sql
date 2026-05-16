@@ -1,5 +1,5 @@
 -- F-NOPATH — two disconnected datasets (no relationships).
--- Source: ../../../../proposals/foundation-v0.1/DATA_TESTS.md §3.5
+-- Source: ../../DATA_TESTS.md §3.5
 --
 -- Used by E_NO_PATH (D-018) and E3013_NO_STITCHING_DIMENSION tests:
 -- orders and inventory_movements share no key and have no declared
