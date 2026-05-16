@@ -42,6 +42,7 @@ _APPENDIX_C_CODES: frozenset[str] = frozenset(
         "E_EMPTY_AGGREGATION_QUERY",
         "E_EMPTY_SCALAR_QUERY",
         "E_FAN_OUT_IN_SCALAR_QUERY",
+        "E_FIELD_DEPENDENCY_CYCLE",
         "E_INVALID_NATURAL_GRAIN",
         "E_MIXED_PREDICATE_LEVEL",
         "E_MIXED_QUERY_SHAPE",
@@ -49,9 +50,11 @@ _APPENDIX_C_CODES: frozenset[str] = frozenset(
         "E_NAME_NOT_FOUND",
         "E_NATURAL_GRAIN_PRE_AGGREGATION_UNSAFE",
         "E_NESTED_AGGREGATION_DEFERRED",
+        "E_NESTED_WINDOW",
         "E_NO_PATH",
         "E_NON_AGGREGATE_IN_HAVING",
         "E_PRIMARY_KEY_REQUIRED",
+        "E_RESERVED_NAME",
         "E_UNAGGREGATED_FINER_GRAIN_REFERENCE",
         "E_UNKNOWN_FUNCTION",  # D-021 — function whitelist
         "E_UNSAFE_REAGGREGATION",
@@ -80,24 +83,12 @@ _IMPLEMENTATION_EXTENSIONS: dict[str, str] = {
         "RESERVED — superseded by E_NESTED_AGGREGATION_DEFERRED. "
         "Kept so external pinning does not break."
     ),
-    "E_FIELD_DEPENDENCY_CYCLE": (
-        "Implementation invariant — fields on the same dataset must "
-        "form a DAG. Could be promoted into a spec section on field "
-        "composition if the standard ever requires acyclicity."
-    ),
-    "E_NESTED_WINDOW": (
-        "Implementation-named code for D-031 nested-window rejection. "
-        "The spec mandates *a* parse-level error for nested windows; "
-        "we surface it under a stable name rather than a numeric one."
-    ),
     "E_RESERVED_IDENTIFIER": (
         "Implementation invariant — identifiers that collide with "
-        "OSI-reserved names (``__step``, ``__osi_*``) are rejected. "
-        "Internal naming concern, not part of Appendix C."
-    ),
-    "E_RESERVED_NAME": (
-        "Implementation invariant — sibling of E_RESERVED_IDENTIFIER, "
-        "for model-level name collisions with OSI internals."
+        "OSI-reserved internal names (``__step``, ``__osi_*``) are "
+        "rejected at identifier construction. Internal naming "
+        "concern, distinct from the user-facing D-019 collision "
+        "(``E_RESERVED_NAME``, now in Appendix C)."
     ),
     "E_INTERNAL_INVARIANT": (
         "Compiler-bug signal — raised when the IR or a diagnostic "
@@ -127,7 +118,9 @@ def test_every_named_enum_member_is_documented() -> None:
     A member is documented if it is either in Appendix C or is
     explicitly listed as an implementation extension above.
     """
-    named_enum_codes = {code.value for code in ErrorCode if code.value.startswith("E_")}
+    named_enum_codes = {
+        code.value for code in ErrorCode if code.value.startswith("E_")
+    }
     spec_codes = {c for c in _APPENDIX_C_CODES if c.startswith("E_")}
     extensions = set(_IMPLEMENTATION_EXTENSIONS)
     undocumented = sorted(named_enum_codes - spec_codes - extensions)

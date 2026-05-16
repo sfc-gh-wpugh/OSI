@@ -57,6 +57,14 @@ _INTENTIONALLY_ABSENT_DECISIONS: dict[str, str] = {
     # D-013 is reserved in the spec but has no Appendix-B row (the
     # number is intentionally skipped — see Proposed_OSI_Semantics.md).
     "D-013": "Reserved in Appendix B (number skipped).",
+    # D-015 is struck in Appendix B (~~D-015~~ Deferred — moved to a
+    # separate proposal). The compilation-strategy equivalence for
+    # field-level cross-grain aggregation is moot at the Foundation
+    # level because field-level aggregation itself is deferred per
+    # D-003. The Foundation surface is exercised by the D-003
+    # rejection witness; the strategy equivalence returns alongside
+    # §10's grain-aware-functions proposal.
+    "D-015": "Struck in Appendix B; depends on the deferred D-003.",
     # D-017 is deferred — semi-join filtering moved to a follow-up
     # proposal. The negative test for EXISTS_IN lives in
     # tests/deferred/ instead.

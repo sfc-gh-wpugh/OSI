@@ -29,14 +29,20 @@ proposals:
     title: Predicate routing by resolved expression shape (no role:)
     spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#6.3
     decisions: [D-005, D-012]
-  - id: implicit_home_grain_aggregation
+  - id: implicit_home_grain_aggregation_rejection
     status: foundation
-    title: Implicit home-grain aggregation in field expressions
-    spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#4.3.1
-    decisions: [D-003, D-015]
+    title: Implicit home-grain aggregation in field expressions is rejected (E_AGGREGATE_IN_FIELD)
+    spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#4.3
+    rejection_code: E_AGGREGATE_IN_FIELD
+    decisions: [D-003]
+    # D-003 and D-015 are both struck/deferred in Appendix B; the
+    # Foundation's active surface is the rejection rule (any aggregate
+    # in a field body MUST raise E_AGGREGATE_IN_FIELD per §4.3 /
+    # Appendix C). Per-strategy equivalence (D-015) returns when
+    # §10's grain-aware-functions proposal lands.
   - id: cross_grain_aggregates
     status: foundation
-    title: Single-step + nested cross-grain aggregates over 1:N
+    title: Single-step cross-grain aggregates over 1:N (nested form is deferred per D-020(c)/D-027(d))
     spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#4.5
     decisions: [D-020, D-024]
   - id: default_join_shapes
@@ -79,6 +85,12 @@ proposals:
     title: OSI_SQL_2026 default dialect with per-dialect expression form
     spec_ref: ../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md
     decisions: [D-021, D-016]
+  - id: windowed_metric_composition
+    status: foundation
+    title: Composing a metric on top of a windowed metric is rejected with E_WINDOWED_METRIC_COMPOSITION
+    spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#6.10.5
+    rejection_code: E_WINDOWED_METRIC_COMPOSITION
+    decisions: [D-031]
 
   # -------- Deferred (§10 of the Foundation spec) ---------------------
   # Each deferred entry MUST be rejected at parse time with
@@ -159,11 +171,8 @@ proposals:
     title: WITHIN GROUP ordered-set aggregates (LISTAGG, PERCENTILE_CONT)
     spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#10
     rejection_code: E_DEFERRED_KEY_REJECTED
-  - id: windowed_metric_composition
-    status: deferred
-    title: Composing a metric on top of a metric whose body contains a window
-    spec_ref: ../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md#6.10.5
-    rejection_code: E_WINDOWED_METRIC_COMPOSITION
+  # ----- moved up: this is a Foundation rejection rule, not deferral
+  # See the foundation block above for the actual entry.
   - id: named_filters
     status: deferred
     title: Reusable named boolean filters referenced by name

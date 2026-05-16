@@ -43,7 +43,11 @@ _LEGACY_CODE_MAP: dict[ErrorCode, ErrorCode] = {
     ErrorCode.E2004_UNREACHABLE_DATASET: ErrorCode.E_NO_PATH,
     ErrorCode.E2008_RESERVED_IDENTIFIER: ErrorCode.E_RESERVED_IDENTIFIER,
     ErrorCode.E3001_AMBIGUOUS_JOIN_PATH: ErrorCode.E_AMBIGUOUS_PATH,
-    ErrorCode.E3013_NO_STITCHING_DIMENSION: ErrorCode.E_NO_PATH,
+    # E3013_NO_STITCHING_DIMENSION is kept as ``E3013`` per Appendix C:
+    # it is a *distinct* condition from generic path resolution failure
+    # (``E_NO_PATH``) — two unrelated facts with no shared stitch
+    # dimension would yield a Cartesian product, not a missing path.
+    # No mapping → the numeric code surfaces unchanged.
 }
 from osi.parsing.graph import build_graph  # noqa: E402
 from osi.parsing.namespace import build_namespace  # noqa: E402
@@ -221,7 +225,9 @@ def cmd_sql(args: argparse.Namespace) -> int:
         if aliases:
             from dataclasses import replace as _replace
 
-            from osi.common.identifiers import normalize_identifier as _norm
+            from osi.common.identifiers import (
+                normalize_identifier as _norm,
+            )
 
             compiled_plan = _replace(
                 compiled_plan,

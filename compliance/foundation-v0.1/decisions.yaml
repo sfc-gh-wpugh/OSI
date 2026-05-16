@@ -20,7 +20,6 @@ decisions:
     spec_ref: "§5.1.1, §6.2, §6.6"
     tests:
       - tests/edge_cases/easy/t-061-orphan-fact-row-null-dim/
-      - tests/error_taxonomy/easy/t-050-empty-aggregation-query/
       - tests/query_shape/easy/t-001-aggregation-cardinality/
     status: must_pass
 
@@ -54,6 +53,7 @@ decisions:
     spec_ref: "§4.3, §6.3"
     tests:
       - tests/cross_grain/moderate/t-024-boolean-home-grain-scalar-in-where/
+      - tests/query_shape/easy/t-028-where-and-list/
     status: must_pass
 
   - id: D-006
@@ -75,8 +75,7 @@ decisions:
     title: No per-metric joins.type override at Foundation level (deferred)
     spec_ref: "§6.6, §6.9"
     tests:
-      # No active witness — Phase 4 review I7 backlog.
-      []
+      - tests/deferred/easy/t-042d-per-metric-joins-type/
     status: must_pass
 
   - id: D-009
@@ -94,15 +93,13 @@ decisions:
       - tests/deferred/easy/t-042h-unsafe/
       - tests/deferred/easy/t-042i-agg/
       - tests/deferred/easy/t-042j-grain-agg/
-      - tests/deferred/easy/t-042k-groups-frame/
-      - tests/deferred/easy/t-042l-parameterised-frame-bound/
-      - tests/namespace/hard/t-044-composite-key-join/
     status: must_pass
 
   - id: D-010
     title: Aggregation vs Scalar query shape — mixing rejected with E_MIXED_QUERY_SHAPE
     spec_ref: §5.1
     tests:
+      - tests/error_taxonomy/easy/t-050-empty-aggregation-query/
       - tests/error_taxonomy/easy/t-051-empty-scalar-query/
       - tests/query_shape/easy/t-002-mixed-query-shape/
     status: must_pass
@@ -127,18 +124,8 @@ decisions:
     title: Per-engine determinism — same (model, query, dialect) → byte-identical SQL
     spec_ref: §11
     tests:
-      - tests/empty_inputs/moderate/t-049-null-dimension-column/
       - tests/null_ordering/moderate/t-026-nulls-last-default/
-      - tests/query_shape/easy/t-028-where-and-list/
       - tests/query_shape/easy/t-052-limit-without-order/
-    status: must_pass
-
-  - id: D-015
-    title: Implicit home-grain aggregation strategies are equivalent (correlated / LATERAL / pre-agg CTE)
-    spec_ref: "§4.3, §6.2"
-    tests:
-      # No active witness — Phase 4 review I7 backlog.
-      []
     status: must_pass
 
   - id: D-016
@@ -153,6 +140,7 @@ decisions:
     spec_ref: §6.9
     tests:
       - tests/namespace/easy/t-040-no-path-error/
+      - tests/namespace/hard/t-044-composite-key-join/
       - tests/namespace/hard/t-046-reflexive-relationship/
       - tests/namespace/moderate/t-019-ambiguous-path/
     status: must_pass
@@ -240,8 +228,8 @@ decisions:
     title: Standard SQL window functions in Measures / Fields / Order By / Having; Where ⇒ E_WINDOW_IN_WHERE
     spec_ref: §6.10.1
     tests:
-      # No active witness — Phase 4 review I7 backlog.
-      []
+      - tests/windows/moderate/t-029-window-in-where-rejected/
+      - tests/windows/moderate/t-030-nested-window-rejected/
     status: must_pass
 
   - id: D-029
@@ -257,7 +245,6 @@ decisions:
     spec_ref: §6.10.3
     tests:
       - tests/windows/hard/t-032-row-number-qualify-pattern/
-      - tests/windows/moderate/t-029-window-in-where-rejected/
       - tests/windows/moderate/t-031-running-total-window/
       - tests/windows/moderate/t-036-window-over-1n-fanout-accepted/
     status: must_pass
@@ -267,7 +254,6 @@ decisions:
     spec_ref: §6.10.5
     tests:
       - tests/windows/hard/t-033-windowed-metric-composition-rejected/
-      - tests/windows/moderate/t-030-nested-window-rejected/
     status: must_pass
 
   - id: D-032
@@ -284,5 +270,6 @@ decisions:
     tests:
       - tests/edge_cases/easy/t-060-empty-input-count-distinct/
       - tests/empty_inputs/moderate/t-047-empty-set-sum-vs-count/
+      - tests/empty_inputs/moderate/t-049-null-dimension-column/
       - tests/empty_inputs/moderate/t-053-avg-min-max-empty/
     status: must_pass
