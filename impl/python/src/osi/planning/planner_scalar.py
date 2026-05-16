@@ -33,9 +33,16 @@ from typing import Sequence
 from sqlglot import expressions as exp
 
 from osi.common.identifiers import Identifier, normalize_identifier
+from osi.common.sql_expr import FrozenSQL
+from osi.common.windows import is_windowed_expression
 from osi.errors import ErrorCode, OSIParseError, OSIPlanningError
 from osi.planning.algebra.operations import project
-from osi.planning.joins import find_enrichment_path
+from osi.planning.classify import (
+    ClassifiedWhere,
+    RowLevelPredicate,
+    classify_where,
+)
+from osi.planning.joins import JoinStep, find_enrichment_path
 from osi.planning.plan import (
     OrderByEntry,
     PlanOperation,
@@ -50,7 +57,7 @@ from osi.planning.resolve import (
     ResolvedMetric,
     resolve_reference,
 )
-from osi.planning.semantic_query import OrderBy, SemanticQuery, SortDirection
+from osi.planning.semantic_query import OrderBy, Reference, SemanticQuery, SortDirection
 from osi.planning.steps import (
     PlanBuilder,
     enrich_step,
@@ -66,11 +73,27 @@ def plan_scalar(query: SemanticQuery, context: PlannerContext) -> QueryPlan:
     Pure; deterministic given the field order in ``query.fields``.
     """
     resolved = _resolve_fields(query.fields, context)
-    anchor = resolved[0].dataset
-    other_datasets = frozenset(r.dataset for r in resolved if r.dataset != anchor)
+    # Pick the anchor: the first field whose dataset is bound. Model-
+    # scoped derived metrics (including windowed ones) carry
+    # ``dataset=None`` and cannot anchor a scalar query — they need a
+    # dataset-bound field to define which rows are preserved.
+    anchor = next((r.dataset for r in resolved if r.dataset is not None), None)
+    if anchor is None:
+        raise OSIPlanningError(
+            ErrorCode.E_EMPTY_SCALAR_QUERY,
+            (
+                "scalar query has no dataset-bound field; add a Fields "
+                "entry that resolves to a dataset column (or move the "
+                "windowed metric onto a dataset) so the anchor rows "
+                "are defined. See Proposed_OSI_Semantics.md D-010."
+            ),
+        )
+    other_datasets: frozenset[Identifier] = frozenset(
+        r.dataset for r in resolved if r.dataset is not None and r.dataset != anchor
+    )
 
     builder = PlanBuilder()
-    enrichment = ()
+    enrichment: tuple[JoinStep, ...] = ()
     if other_datasets:
         try:
             enrichment = find_enrichment_path(
@@ -154,10 +177,10 @@ def plan_scalar(query: SemanticQuery, context: PlannerContext) -> QueryPlan:
 
 
 def _partition_filters(
-    where,
+    where: FrozenSQL | None,
     windowed_metric_names: frozenset[Identifier],
     context: PlannerContext,
-):
+) -> tuple[tuple[RowLevelPredicate, ...], tuple[RowLevelPredicate, ...]]:
     """Split row-level WHERE predicates into pre-window vs post-window.
 
     A predicate is *post-window* iff any of its referenced columns
@@ -166,17 +189,15 @@ def _partition_filters(
     by the scalar planner — if they appear, surface a clean error
     rather than silently dropping them.
     """
-    from osi.planning.classify import classify_where
-
-    classified = classify_where(where, context.namespace)
+    classified: ClassifiedWhere = classify_where(where, context.namespace)
     if classified.semi_joins:
         raise OSIPlanningError(
             ErrorCode.E_AGGREGATE_IN_SCALAR_QUERY,
             "scalar query filters cannot contain EXISTS_IN / NOT_EXISTS_IN; "
             "convert to an aggregation query.",
         )
-    pre: list = []
-    post: list = []
+    pre: list[RowLevelPredicate] = []
+    post: list[RowLevelPredicate] = []
     for pred in classified.row_level:
         if pred.columns & windowed_metric_names:
             post.append(pred)
@@ -199,7 +220,6 @@ def _add_windowed_metric_columns(
     windowed_metrics: Sequence[ResolvedMetric],
     builder: PlanBuilder,
 ) -> PlanStep:
-    from osi.common.sql_expr import FrozenSQL
     from osi.planning.algebra.composition import add_columns
     from osi.planning.algebra.state import Column, ColumnKind
     from osi.planning.plan import AddColumnsPayload
@@ -230,12 +250,10 @@ def _add_windowed_metric_columns(
 
 
 def _resolve_fields(
-    refs: Sequence,
+    refs: Sequence[Reference],
     context: PlannerContext,
 ) -> tuple[ResolvedDimension | ResolvedFact | ResolvedMetric, ...]:
-    from osi.common.windows import is_windowed_expression
-
-    out = []
+    out: list[ResolvedDimension | ResolvedFact | ResolvedMetric] = []
     for ref in refs:
         resolved = resolve_reference(ref, context.namespace)
         if isinstance(resolved, ResolvedMetric):
