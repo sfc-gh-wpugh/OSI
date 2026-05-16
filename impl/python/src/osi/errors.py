@@ -53,9 +53,13 @@ class ErrorCode(StrEnum):
     E_UNAGGREGATED_FINER_GRAIN_REFERENCE = "E_UNAGGREGATED_FINER_GRAIN_REFERENCE"
     # S-9 / D-022 — the chosen plan forces a multi-stage decomposition the
     # aggregate cannot survive (holistic over §6.7 chasm pre-aggregation
-    # or §6.8.2 stitch). The §6.8.1 bridge plan is **not** in this family
-    # — it is a single-pass aggregate over the de-duplicated row set and
-    # is accepted bare for every aggregate category per D-027.
+    # or §6.8.2 stitch). The §6.8.1 bridge plan is **conceptually** not
+    # in this family — D-027 describes it as a single-pass aggregate over
+    # the de-duplicated row set. The reference implementation currently
+    # realises that route only for the distributive operators (``SUM``,
+    # ``COUNT``, ``MIN``, ``MAX``) plus ``COUNT(DISTINCT)``; ``AVG``,
+    # ``MEDIAN``, and ``PERCENTILE_CONT`` over an N:N bridge are still
+    # pending and surface this code today (see ``planner_bridge.py``).
     E_UNSAFE_REAGGREGATION = "E_UNSAFE_REAGGREGATION"
     # RESERVED — superseded by E_NESTED_AGGREGATION_DEFERRED. The
     # Foundation defers all nested aggregation in metric expressions to
