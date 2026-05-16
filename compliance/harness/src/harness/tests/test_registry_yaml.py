@@ -107,3 +107,68 @@ def test_decisions_yaml_has_all_decision_ids() -> None:
         f"absent: {sorted(accidental)}. Update "
         "_INTENTIONALLY_ABSENT_DECISIONS or remove the row."
     )
+
+
+def test_decisions_yaml_paths_exist_on_disk() -> None:
+    """Every ``tests:`` path in decisions.yaml must point to a real test.
+
+    Phase 4 review B2 — pre-migration paths still littered the file
+    and the coverage-by-decision report was reading a fictional disk.
+    A path that doesn't resolve to a directory with a ``metadata.yaml``
+    is a regression: either the test was renamed, moved, or deleted
+    and decisions.yaml wasn't updated.
+    """
+    raw = (_FOUNDATION_DIR / "decisions.yaml").read_text(encoding="utf-8")
+    loaded = yaml.safe_load(raw)
+    decisions = loaded.get("decisions", [])
+
+    missing: list[tuple[str, str]] = []
+    for row in decisions:
+        for test_rel in row.get("tests") or ():
+            test_dir = _FOUNDATION_DIR / test_rel
+            if not (test_dir / "metadata.yaml").exists():
+                missing.append((row["id"], test_rel))
+
+    assert not missing, (
+        "decisions.yaml references paths that don't exist on disk:\n"
+        + "\n".join(f"  {d}: {p}" for d, p in missing)
+        + "\nRegenerate the tests: lists from disk metadata, or move "
+        "the renamed test back."
+    )
+
+
+def test_every_disk_test_pins_a_known_decision() -> None:
+    """The inverse: every metadata.yaml's ``decision`` must be in
+    decisions.yaml (or :data:`_INTENTIONALLY_ABSENT_DECISIONS`).
+
+    Closes the second half of the drift gap — without this, a test
+    can pin a decision that no longer has a registry row and the
+    coverage report silently misses it.
+    """
+    raw = (_FOUNDATION_DIR / "decisions.yaml").read_text(encoding="utf-8")
+    loaded = yaml.safe_load(raw)
+    known = {row["id"] for row in loaded.get("decisions", [])}
+    known.update(_INTENTIONALLY_ABSENT_DECISIONS)
+
+    unknown_pins: list[tuple[Path, str]] = []
+    tests_dir = _FOUNDATION_DIR / "tests"
+    for meta_path in sorted(tests_dir.rglob("metadata.yaml")):
+        metadata = yaml.safe_load(meta_path.read_text())
+        decision = metadata.get("decision") or metadata.get("decisions")
+        decisions = (
+            [decision]
+            if isinstance(decision, str)
+            else (decision or [])
+        )
+        for d in decisions:
+            if d not in known:
+                unknown_pins.append((meta_path, d))
+
+    assert not unknown_pins, (
+        "Test metadata pins decisions that don't appear in "
+        "decisions.yaml:\n"
+        + "\n".join(
+            f"  {p.relative_to(_FOUNDATION_DIR)}: {d}"
+            for p, d in unknown_pins
+        )
+    )
