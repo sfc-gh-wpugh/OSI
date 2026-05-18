@@ -53,7 +53,7 @@ Read in this order:
 
 | # | Document | What it is |
 |:--:|:---|:---|
-| 1 | [`SPEC.md`](SPEC.md) | What we are building, phased plan, component contracts. |
+| 1 | [`SPEC.md`](SPEC.md) | Project goals, feature scope, expression handling, and error discipline reference. |
 | 2 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | The three-layer pipeline, architectural invariants, where-to-add-things decision tree. |
 | 3 | [`INFRA.md`](INFRA.md) | Quality standards, toolchain, infrastructure roadmap, decisions log. |
 | 4 | [`../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md) | The Foundation — authoritative standard. |
@@ -95,14 +95,14 @@ semantic_model:
           - {name: customer_id, expression: customer_id, role: dimension}
           - {name: status,      expression: status,      role: dimension}
           - {name: amount,      expression: amount,      role: fact}
-        metrics:
-          - {name: total_revenue, expression: SUM(amount)}
       - name: customers
         source: sales.customers
         primary_key: [id]
         fields:
           - {name: id,     expression: id,     role: dimension}
           - {name: region, expression: region, role: dimension}
+    metrics:
+      - {name: total_revenue, expression: SUM(orders.amount)}
     relationships:
       - name: orders_to_customers
         from: orders
@@ -140,7 +140,7 @@ implementation keeps the *opt-back-in* path behind a feature-flag
 object. Use it when migrating an existing model that still relies on
 the legacy form:
 
-```python
+```python illustrative
 from osi.config import FoundationFlags
 from osi.parsing.parser import parse_semantic_model
 
@@ -149,6 +149,10 @@ result = parse_semantic_model(
     flags=FoundationFlags(allow_aggregate_in_field=True),
 )
 ```
+
+(The `illustrative` directive tells the README drift test in
+`tests/integration/readme/` to compile-only the block — `model.yaml` is
+caller-supplied and the snippet would otherwise fail at runtime.)
 
 The flags are documented in [`src/osi/config.py`](src/osi/config.py).
 Models that turn flags on are no longer portable — the canonical
@@ -181,7 +185,7 @@ impl/python/                     (this directory)
   SPEC.md                        # what to build
   ARCHITECTURE.md                # how the layers fit
   INFRA.md                       # quality gates & toolchain
-  AGENTS.md · CLAUDE.md · CONTRIBUTING.md
+  AGENTS.md · CONTRIBUTING.md
 
   src/osi/                       # the implementation
     parsing/
@@ -294,8 +298,7 @@ Explicitly deferred (`Proposed_OSI_Semantics.md §10`) and tracked as
   single-bridge resolutions by introducing an intermediate dataset
   modelled as a fact.
 
-See [`SPEC.md §11`](SPEC.md#11-implementation-phases) for the phased plan
-and [`INFRA.md §3`](INFRA.md) for the roadmap.
+See [`INFRA.md §3`](INFRA.md) for the infrastructure roadmap.
 
 ---
 

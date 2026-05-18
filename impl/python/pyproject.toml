@@ -212,6 +212,39 @@ type = "forbidden"
 source_modules = ["osi.codegen"]
 forbidden_modules = ["osi.parsing"]
 
+# The CLI is the user-facing entry point — it sits *above* the
+# three-layer pipeline. No layer should call back into the CLI;
+# doing so would create a presentation-to-engine dependency that
+# breaks the layered architecture and makes the engine
+# untestable without the CLI surface.
+[[tool.importlinter.contracts]]
+name = "CLI is a sink: no layer may import osi.cli or osi.__main__"
+type = "forbidden"
+source_modules = ["osi.parsing", "osi.planning", "osi.codegen", "osi.common", "osi.diagnostics"]
+forbidden_modules = ["osi.cli", "osi.__main__"]
+
+# Diagnostics formats errors for humans — it lives next to the CLI,
+# above the three-layer pipeline. Planning and codegen must not
+# depend on it; if they did, the engine could not be embedded in a
+# host application without dragging in the diagnostics layer's
+# presentation choices.
+[[tool.importlinter.contracts]]
+name = "Diagnostics is a presentation layer: planning/codegen may not import it"
+type = "forbidden"
+source_modules = ["osi.planning", "osi.codegen", "osi.parsing"]
+forbidden_modules = ["osi.diagnostics"]
+
+# FoundationFlags is a parse-time-only concern: it controls how the
+# parser treats deferred features. By the time we reach codegen the
+# model has been parsed and the flag has either been honoured or
+# rejected, so codegen should never need to look at flags.
+# Enforcing this prevents a "feature flag tunnel" from forming.
+[[tool.importlinter.contracts]]
+name = "Codegen does not see FoundationFlags (parse-time-only concern)"
+type = "forbidden"
+source_modules = ["osi.codegen"]
+forbidden_modules = ["osi.config"]
+
 # NOTE: The "algebra state is only constructed inside algebra" contract
 # (Phase 3 code-review I6) requires refactoring ``osi.planning.steps`` to
 # stop instantiating ``Column`` directly — that file is one of the three

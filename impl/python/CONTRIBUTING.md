@@ -203,7 +203,7 @@ disabled — typically `E_DEFERRED_KEY_REJECTED`).
 
 1. Move the spec text from
    `../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md` into the
-   relevant main spec section, and link from `SPEC.md §11`.
+   relevant main spec section in `SPEC.md`.
 2. Build the feature in `src/osi/<layer>/`. Delete the rejection that
    previously raised `E_DEFERRED_KEY_REJECTED` for the now-allowed
    construct.

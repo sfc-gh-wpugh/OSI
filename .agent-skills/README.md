@@ -9,6 +9,26 @@ tool's hidden directory so it's clear they're meant to be shared.
 
 ## Available skills
 
+### Reviewer / designer skills (dual-purpose: review existing code + design new code)
+
+See [`REVIEWER_SKILLS.md`](REVIEWER_SKILLS.md) for the full index, the
+shared *triage rule* every reviewer skill carries, and the recommended
+sweep order.
+
+| Skill | Angle |
+|:---|:---|
+| [`architectural-review/`](architectural-review/SKILL.md) | Three-layer pipeline, one-way information flow, closed algebra, numbered invariants. |
+| [`interfaces-and-api-review/`](interfaces-and-api-review/SKILL.md) | Layer facades, signature shape, total functions. |
+| [`code-encourages-correct-use-review/`](code-encourages-correct-use-review/SKILL.md) | "Make illegal states unrepresentable" — construction discipline. |
+| [`bi-best-practices-review/`](bi-best-practices-review/SKILL.md) | Grain awareness, fan-out, bridge dedup, conformed dims, semi-additive measures. |
+| [`compiler-best-practices-review/`](compiler-best-practices-review/SKILL.md) | Phase boundaries, IR purity, totality, deterministic codegen, error taxonomy. |
+| [`database-best-practices-review/`](database-best-practices-review/SKILL.md) | SQL emission via AST, identifier quoting, NULL ordering, multiset semantics, dialect adapter isolation. |
+| [`doc-as-enforcement-review/`](doc-as-enforcement-review/SKILL.md) | Drift tests for layered docs, citation conventions, runnable READMEs. |
+| [`typing-enforcement-review/`](typing-enforcement-review/SKILL.md) | `NewType` discipline, no `Any` at boundaries, `Protocol` / `TypedDict`, frozen-by-default, mypy strictness. |
+| [`spec-coherence-review/`](spec-coherence-review/SKILL.md) | Spec ↔ Appendix C ↔ `ErrorCode` ↔ compliance tests stay coherent. |
+
+### Operational skills (run something, produce a report)
+
 | Skill | When to use |
 |:---|:---|
 | [`run-osi-python-tests/`](run-osi-python-tests/SKILL.md) | Run the full test pyramid (unit / property / golden / e2e / mutation / coverage / lint / typecheck / arch) for `impl/python/` and surface a single Markdown report. |
@@ -21,8 +41,10 @@ Cursor discovers skills under `.cursor/skills/`. Either:
 1. **Symlink** (recommended — single source of truth):
    ```bash
    mkdir -p .cursor/skills
-   ln -s ../../.agent-skills/run-osi-python-tests .cursor/skills/
-   ln -s ../../.agent-skills/run-osi-compliance   .cursor/skills/
+   for d in .agent-skills/*/; do
+     name=$(basename "$d")
+     ln -sfn "../../$d" ".cursor/skills/$name"
+   done
    ```
 2. **Or copy** each skill folder into `.cursor/skills/` and remember to
    keep both in sync.
@@ -38,15 +60,18 @@ Claude Code reads skills from `.claude/skills/` (project-scoped) or
 
 ```bash
 mkdir -p .claude/skills
-ln -s ../../.agent-skills/run-osi-python-tests .claude/skills/
-ln -s ../../.agent-skills/run-osi-compliance   .claude/skills/
+for d in .agent-skills/*/; do
+  name=$(basename "$d")
+  ln -sfn "../../$d" ".claude/skills/$name"
+done
 ```
 
 Or for user-scoped availability across all of your projects:
 
 ```bash
-ln -s "$(pwd)/.agent-skills/run-osi-python-tests" ~/.claude/skills/
-ln -s "$(pwd)/.agent-skills/run-osi-compliance"   ~/.claude/skills/
+for d in "$(pwd)/.agent-skills/"*/; do
+  ln -sfn "$d" ~/.claude/skills/
+done
 ```
 
 ## Using these with any other agent

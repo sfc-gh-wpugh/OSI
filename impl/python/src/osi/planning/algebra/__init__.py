@@ -18,10 +18,11 @@ The nine operators and their current planner wiring:
 - :func:`project` — keep only the named columns. *Emitted once at the
   root.*
 - :func:`add_columns` — introduce derived scalar columns. *Emitted only
-  for composite metrics (Foundation spec §5.4).*
+  for composite metrics — arithmetic combinations of already-defined
+  metrics. (Spec: §4.5 — Metrics, rule 2.)*
 - :func:`merge` — full-outer chasm-safe join at matching grain.
   *Emitted when two measure groups with different fact datasets must
-  be combined (Foundation spec §4.11).*
+  be combined via the stitch plan. (Spec: §6.8.2 — stitch.)*
 - :func:`filtering_join` — semi-/anti-semi-join. **Experimental.**
   Emitted for ``EXISTS_IN`` / ``NOT EXISTS_IN`` predicates in
   ``WHERE`` when the caller opts in via

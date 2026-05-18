@@ -22,7 +22,9 @@ If a proposed change breaks that sentence, it is the wrong change.
 3. [Layer 2 — Planning](#3-layer-2--planning)
 4. [Layer 3 — Codegen](#4-layer-3--codegen)
 5. [The closed algebra](#5-the-closed-algebra)
-6. [Architectural invariants](#6-architectural-invariants)
+6. [Architectural invariants](#6-architectural-invariants) — including
+   the *Invariants enforced in code* catalog (mapping each numbered
+   invariant to the deterministic check that enforces it)
 7. [Error discipline](#7-error-discipline)
 8. [Where to add things](#8-where-to-add-things)
 9. [Canonical entry points](#9-canonical-entry-points)
@@ -369,6 +371,43 @@ the codebase; a PR that violates one should not merge.
 16. **Cardinality requires declared keys.** When cardinality cannot be
     inferred from PK/UK declarations, parsing raises
     `E3003 AMBIGUOUS_CARDINALITY`. The planner never guesses.
+
+### Invariants enforced in code
+
+Each numbered invariant above is *either* enforced by a deterministic
+check (lint rule, import-linter contract, arch-test, drift test,
+property test, mypy rule) *or* documented here as enforced by review
+only. A new invariant must come with a deterministic check in the same
+PR if mechanically possible; if not, an explicit entry in this table
+with rationale.
+
+A drift test (`tests/unit/test_arch_invariants_drift.py`, added in the
+long-term-viability audit Phase C) verifies that every invariant
+number below appears in this catalog and that every catalog row cites
+a real source file or test.
+
+| # | Invariant | Enforcement |
+|--:|:----------|:------------|
+| 1 | Closed state (`CalculationState` only from algebra) | Reviewed; the algebra package is the only constructor site. Tracked for promotion to an import-linter contract once `osi.planning.steps` is split (see INFRA.md I-56). |
+| 2 | Immutability | `mypy --strict` + `frozen=True` on every IR dataclass; `tests/properties/test_algebra_purity.py`. |
+| 3 | Pure functions | `tests/properties/test_algebra_purity.py` (no side effects), `test_algebra_determinism.py` (no global state). |
+| 4 | Determinism | `tests/properties/test_algebra_determinism.py` + golden plan + golden SQL tests per dialect. |
+| 5 | Grain tracking | `tests/properties/test_grain_closure.py`, `test_chasm_safety.py`, `test_explosion_safety.py`, `test_enrich_preserves_rows.py`. |
+| 6 | One-way layer flow | `[tool.importlinter]` contracts in [`pyproject.toml`](pyproject.toml): six contracts pin the layered architecture — `parsing → planning/codegen` forbidden; `planning → codegen` forbidden; `codegen → parsing` forbidden; **no layer may import `osi.cli`/`osi.__main__`** (CLI is a sink); **`planning`/`codegen` may not import `osi.diagnostics`** (presentation layer); **`codegen` may not import `osi.config`** (FoundationFlags is parse-time only). |
+| 7 | `PlannerContext` as the only model handle | Reviewed; tracked for promotion to an import-linter contract once `steps.py` is split (INFRA.md I-56). The audit's Phase C `c2-invariants` drift test verifies this row exists. |
+| 8 | Facades stay consistent | `flake8-docstrings` + the audit's Phase C `c4-layer-readme` drift test (layer README ↔ files in folder). |
+| 9 | No silent wrong SQL | `tests/properties/test_error_taxonomy.py` (algebra) + `tests/unit/test_every_exception_is_osierror.py` (whole codebase): AST-walks every `raise` and every broad `except` in `src/osi/` and forbids non-OSIError types except documented exemptions. |
+| 10 | SQL composition via AST only | Banned f-string-SQL `rg` lint + custom `flake8` rule (INFRA.md §1.2). |
+| 11 | Identifier safety | `tests/unit/test_common_identifiers.py`; `osi.common.identifiers.normalize_identifier` is the single gate. |
+| 12 | Column prefixes from one place | `tests/unit/test_synthetic_naming_invariants.py`. |
+| 13 | No deferred-feature plumbing | Parser rejects with `E_DEFERRED_KEY_REJECTED` / `E1105`; the audit's Phase C `c1-specrefs` drift test pins the deferred-feature gate. |
+| 14 | One planner | Reviewed; the `osi.planning` facade re-exports exactly one `Planner` class. |
+| 15 | Relationships declared, not inferred | Reviewed; the `RelationshipGraph` is built only from parsed YAML, never synthesised. Property tests (`test_chasm_safety.py`) exercise the rejection of synthesized paths. |
+| 16 | Cardinality requires declared keys | Reviewed; raised by `parsing/validation.py`. `tests/properties/test_planner_mn_rejection.py` pins the planner-level rejection. |
+
+The catalog is intentionally short; entries marked "reviewed" are
+candidates for promotion to deterministic enforcement and should be
+tracked as INFRA.md §3 roadmap items.
 
 ---
 

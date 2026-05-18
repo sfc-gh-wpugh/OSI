@@ -32,9 +32,10 @@ def merge(
     Preconditions
     -------------
     * ``left.grain == right.grain``
-    * if ``on`` is given, ``on == left.grain`` (the spec §3.7 defines
-      merging on the shared grain — other joins must go through
-      ``enrich`` or ``filtering_join``)
+    * if ``on`` is given, ``on == left.grain`` (the algebra spec
+      ``docs/JOIN_ALGEBRA.md §3.7`` defines merging on the shared
+      grain — other joins must go through ``enrich`` or
+      ``filtering_join``)
     * non-grain columns of the two sides are disjoint
 
     Grain effect: **preserved** (both sides share it).

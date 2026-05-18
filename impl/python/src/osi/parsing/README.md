@@ -34,6 +34,11 @@ Takes a YAML path or string and produces a frozen, validated
   relationships.
 - `field_deps.py` — computes per-field dependency closure used by
   validation and the planner.
+- `function_whitelist.py` — the `OSI_SQL_2026` function whitelist
+  (D-021); the union of every aggregate / window / date / string /
+  math / conditional / type-conversion function in
+  `proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md`. Functions
+  not in this whitelist raise `E_UNKNOWN_FUNCTION` at parse time.
 - `reserved_names.py` — single source of truth for identifiers reserved
   by the Foundation surface.
 - `_root.py` — internal helpers used during YAML pre-processing.

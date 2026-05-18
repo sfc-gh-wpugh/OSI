@@ -7,19 +7,19 @@
 > map to Appendix-C codes. When the two disagree, Appendix C wins and
 > this document and `errors.py` are updated to match in the same PR.
 >
-> **Migration in flight (sprints S-1, S-10).** The legacy
-> `E10xx` / `E11xx` / `E2xxx` / `E3xxx` numeric codes below are being
-> renamed to the `E_*` family from Appendix C. For example, `E1105
+> **Migration note.** The legacy
+> `E10xx` / `E11xx` / `E2xxx` / `E3xxx` numeric codes below have been
+> partially renamed to the `E_*` family from Appendix C. For example, `E1105
 > RESERVED_FOR_DEFERRED` becomes `E_DEFERRED_KEY_REJECTED`; `E2001
 > AMBIGUOUS_NAME` becomes `E_NAME_COLLISION` (model namespace) /
 > `E_AMBIGUOUS_PATH` (relationship traversal); `E2002 NAME_NOT_FOUND`
 > becomes `E_NAME_NOT_FOUND`; `E3001 AMBIGUOUS_JOIN_PATH` becomes
 > `E_AMBIGUOUS_PATH`. The `E3011 / E3012 / E3013` M:N family is kept
 > in numeric form (Appendix C names them `E3012_MN_NO_SAFE_REWRITE`
-> and `E3013_NO_STITCHING_DIMENSION`). Until S-10 lands, both names
-> coexist in this catalog so existing tests keep working — but
-> per the cleanliness clause in `SPEC.md`, S-10 deletes the old
-> spellings outright (no aliases).
+> and `E3013_NO_STITCHING_DIMENSION`). Some legacy numeric spellings
+> remain in `src/osi/errors.py`; per the cleanliness clause in `SPEC.md`
+> the old spellings should be deleted outright (no aliases) when the
+> remaining callsites are updated.
 
 Every error raised by `osi_python` is an `OSIError` subclass carrying a
 stable `ErrorCode`. This file is the catalog; `src/osi/errors.py` is the

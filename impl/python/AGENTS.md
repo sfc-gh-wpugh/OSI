@@ -1,7 +1,24 @@
 # AGENTS.md — Guidance for AI coding agents working on `impl/python`
 
-This file is read by AI coding agents before they make changes. It
-summarizes the non-negotiable rules and the most common pitfalls.
+This file is read by AI coding agents before they make changes. It covers
+orientation, non-negotiable rules, reviewer-skill cadence, and common pitfalls.
+
+## Quick orientation
+
+- **Project type:** Python package — reference compiler for the Foundation of
+  the Open Semantic Interchange (OSI) standard.
+- **Authoritative spec:** [`../../proposals/foundation-v0.1/`](../../proposals/foundation-v0.1/)
+  — in particular
+  [`Proposed_OSI_Semantics.md`](../../proposals/foundation-v0.1/Proposed_OSI_Semantics.md)
+  (`osi_version: "0.1"`),
+  [`SQL_EXPRESSION_SUBSET.md`](../../proposals/foundation-v0.1/SQL_EXPRESSION_SUBSET.md)
+  (`OSI_SQL_2026` default dialect),
+  [`JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md),
+  [`DATA_TESTS.md`](../../compliance/foundation-v0.1/DATA_TESTS.md) (T-NNN vectors).
+- **Implementation docs:** [`SPEC.md`](SPEC.md), [`ARCHITECTURE.md`](ARCHITECTURE.md),
+  [`INFRA.md`](INFRA.md).
+- **Companion compliance suite:** [`../../compliance/foundation-v0.1/`](../../compliance/foundation-v0.1/)
+  — exercises every D-NNN in Appendix B of the Foundation spec.
 
 ## First principles (do not violate)
 
@@ -39,13 +56,60 @@ summarizes the non-negotiable rules and the most common pitfalls.
 
 ## Before modifying code
 
-- Read [`ARCHITECTURE.md`](ARCHITECTURE.md) §6 "Architectural invariants".
+- Read [`ARCHITECTURE.md`](ARCHITECTURE.md) §6 "Architectural invariants"
+  including §6.5 "Invariants enforced in code" (the catalog mapping
+  each invariant to its deterministic check).
 - Check [`INFRA.md §3`](INFRA.md) for an in-progress infrastructure item
   that might overlap with your work.
 - If you are adding or changing an algebra operator, read
   [`JOIN_ALGEBRA.md`](docs/JOIN_ALGEBRA.md)
   in full and check the corresponding property tests in
   `tests/properties/`.
+- For any architectural change (planner, codegen, dialect, algebra),
+  consult all three of the BI / Compiler / Database best-practices
+  skills — at design time *and* at review time (see Reviewer skills below).
+
+## Reviewer skills (load-bearing — use at design time AND review time)
+
+The repo carries dual-purpose reviewer skills under
+[`../../.agent-skills/`](../../.agent-skills/) — each one is usable
+both to *review* an existing change and to *design* a new one. The
+index is [`../../.agent-skills/REVIEWER_SKILLS.md`](../../.agent-skills/REVIEWER_SKILLS.md).
+
+**Cadence rule (from [`../../CONTRIBUTING.md §2`](../../CONTRIBUTING.md)).**
+Any architectural change must consult all three of these skills, both
+at design time and at review time:
+
+- `bi-best-practices-review` — grain / fan-out / bridge / conformed
+  dims / semi-additive measures.
+- `compiler-best-practices-review` — phase boundaries / IR purity /
+  totality / determinism / error taxonomy.
+- `database-best-practices-review` — SQL emission via AST / identifier
+  quoting / NULL ordering / multiset semantics / dialect isolation.
+
+Other skills (architectural, interfaces, typing, doc-as-enforcement,
+code-encourages-correct-use, spec-coherence) run as relevant to the
+change.
+
+Cite the skill(s) you consulted in the PR description per
+[`../../CONTRIBUTING.md §4`](../../CONTRIBUTING.md).
+
+## Triage rule (applies to every finding you produce or receive)
+
+Findings — from a reviewer skill, a failing test, a lint warning, a
+user bug — walk this hierarchy top-down:
+
+1. **Convert to a deterministic check** — drift test, arch-test,
+   import-linter contract, mypy rule, lint rule. Preferred.
+2. **Sharpen the relevant skill's checklist** — update the `SKILL.md`
+   so future runs catch the missed angle.
+3. **Tighten documentation** — `ARCHITECTURE.md` / README / `INFRA.md`.
+4. **Queue as a code-change sprint item** — last resort.
+
+Design-time framing: before writing code that establishes a new
+boundary or invariant, ask "can I add a deterministic check that
+locks this in before the code lands?" If yes, write the check in the
+same PR. Don't defer it.
 
 ## Hard rules
 
@@ -80,16 +144,30 @@ summarizes the non-negotiable rules and the most common pitfalls.
 5. **Skipping golden refresh because "the diff is big".** If the diff
    is big, the plan changed substantially — explain why in the PR.
 
-## Running the project
+## Tooling
 
+This project has its own isolated virtualenv and pre-commit hooks.
 Always activate the project-local venv; do not use the repo-root one.
 
 ```bash
 cd impl/python
-source .venv/bin/activate        # or: `. .venv/bin/activate`
-make check                       # lint + type + tests
-make mutation-fast               # mutation on algebra only
+source .venv/bin/activate
 ```
+
+```bash
+make install-dev         # create .venv, install deps + pre-commit hooks
+make format              # black + isort
+make lint                # flake8 + mypy + import-linter
+make test                # pytest (unit + property + golden + E2E)
+make check               # lint + test
+make mutation-fast       # mutation on the algebra module
+make mutation            # full mutation run
+```
+
+Before committing: run `make check`. A surviving mutation in
+`src/osi/planning/algebra/` from `make mutation-fast` is a P0 — kill
+it first. Cite the invariant number from `ARCHITECTURE.md §6` in the
+PR description when your change touches one.
 
 See [`README.md`](README.md) and [`RUNNING_TESTS.md`](RUNNING_TESTS.md)
 for full entry points.

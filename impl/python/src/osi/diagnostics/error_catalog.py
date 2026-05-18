@@ -425,7 +425,7 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ),
     ErrorCode.E2006_INVALID_RELATIONSHIP: (
         "A relationship's columns do not match the column lists declared on "
-        "the two endpoints. (Spec: §4.7.)"
+        "the two endpoints. (Spec: §4.4.)"
     ),
     ErrorCode.E2007_MISSING_PRIMARY_KEY: (
         "A dataset is referenced as a join target without a "
@@ -448,7 +448,7 @@ _EXPLANATIONS: dict[ErrorCode, str] = {
     ErrorCode.E3003_AMBIGUOUS_CARDINALITY: (
         "RESERVED — kept for a future explicit ``cardinality:`` declaration "
         "on relationships. Cardinality is currently inferred from declared "
-        "keys. (Spec: §4.7.)"
+        "keys. (Spec: §4.4.)"
     ),
     ErrorCode.E3004_GRAIN_NOT_SUBSET: (
         "An algebra step received a grain that is not a subset of its input "
