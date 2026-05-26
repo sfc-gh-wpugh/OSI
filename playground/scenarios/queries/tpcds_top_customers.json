@@ -1,0 +1,14 @@
+{
+  "_comment": "Playground query: top customers by birth country — total sales + quantity, limited to 5 rows. Uses the tpcds_thin model.",
+  "dimensions": [
+    {"dataset": "customer", "name": "c_birth_country"}
+  ],
+  "measures": [
+    {"name": "total_sales"},
+    {"name": "total_qty"}
+  ],
+  "order_by": [
+    {"target": {"name": "total_sales"}, "descending": true}
+  ],
+  "limit": 5
+}

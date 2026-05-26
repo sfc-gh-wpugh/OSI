@@ -1,0 +1,12 @@
+{
+  "_comment": "Playground query: total store-sales price by item category. Uses the tpcds_thin model.",
+  "dimensions": [
+    {"dataset": "item", "name": "i_category"}
+  ],
+  "measures": [
+    {"name": "total_sales"}
+  ],
+  "order_by": [
+    {"target": {"name": "total_sales"}, "descending": true}
+  ]
+}

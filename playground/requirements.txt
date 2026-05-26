@@ -1,0 +1,11 @@
+streamlit>=1.35
+duckdb>=0.10.0
+pyyaml>=6.0
+pandas>=2.0
+sqlglot>=23.0
+
+# OSI package runtime dependencies (osi is loaded via sys.path, not installed,
+# so its deps must be listed here explicitly).
+pydantic>=2.6,<3.0
+networkx>=3.0
+

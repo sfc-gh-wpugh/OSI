@@ -1,0 +1,13 @@
+{
+  "_comment": "Playground query: order count and total revenue broken down by order status. Uses the demo_orders model.",
+  "dimensions": [
+    {"dataset": "orders", "name": "status"}
+  ],
+  "measures": [
+    {"name": "order_count"},
+    {"name": "total_revenue"}
+  ],
+  "order_by": [
+    {"target": {"name": "total_revenue"}, "descending": true}
+  ]
+}
